@@ -63,13 +63,13 @@ export function PlayfulHome() {
           style={{ background: 'radial-gradient(ellipse 50% 60% at 85% 35%, rgba(253,230,220,0.7) 0%, transparent 60%)' }}
         />
 
-        {/* Clouds - contained in hero only */}
+        {/* Clouds - fewer on mobile */}
         <div className="absolute inset-0 pointer-events-none">
-          <Cloud className="absolute top-20 left-[5%] w-48 animate-float-slow" />
-          <Cloud className="absolute top-12 right-[12%] w-36 animate-float-medium" style={{ animationDelay: '-2s' }} />
-          <Cloud className="absolute top-36 left-[45%] w-32 animate-float-fast" style={{ animationDelay: '-1s' }} />
-          <Cloud className="absolute top-8 left-[25%] w-28 animate-float-medium" style={{ animationDelay: '-3s' }} />
-          <Cloud className="absolute top-28 right-[35%] w-24 animate-float-slow" style={{ animationDelay: '-4s' }} />
+          <Cloud className="absolute top-20 left-[5%] w-32 sm:w-48 animate-float-slow" />
+          <Cloud className="absolute top-12 right-[12%] w-24 sm:w-36 animate-float-medium hidden sm:block" style={{ animationDelay: '-2s' }} />
+          <Cloud className="absolute top-36 left-[45%] w-20 sm:w-32 animate-float-fast hidden sm:block" style={{ animationDelay: '-1s' }} />
+          <Cloud className="absolute top-8 left-[25%] w-20 sm:w-28 animate-float-medium" style={{ animationDelay: '-3s' }} />
+          <Cloud className="absolute top-28 right-[35%] w-16 sm:w-24 animate-float-slow hidden md:block" style={{ animationDelay: '-4s' }} />
         </div>
 
         {/* Sun - clean, no emoji */}
@@ -164,24 +164,24 @@ export function PlayfulHome() {
             </div>
 
             {/* Wyatt photos - real + illustrated */}
-            <div className="flex-shrink-0 relative">
+            <div className="flex-shrink-0 relative mt-4 lg:mt-0">
               {/* Main real photo */}
-              <div className="relative bg-white rounded-3xl p-4 shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform">
+              <div className="relative bg-white rounded-2xl sm:rounded-3xl p-3 sm:p-4 shadow-2xl transform -rotate-2 hover:rotate-0 transition-transform">
                 <img
                   src="/images/wyatt-original.png"
                   alt="Wyatt smiling"
-                  className="w-64 sm:w-72 lg:w-80 h-auto rounded-2xl object-cover"
+                  className="w-52 sm:w-64 md:w-72 lg:w-80 h-auto rounded-xl sm:rounded-2xl object-cover"
                 />
-                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white font-bold text-sm px-4 py-2 rounded-full shadow-lg whitespace-nowrap">
+                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-emerald-500 text-white font-bold text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg whitespace-nowrap">
                   Meet Wyatt! ⛳
                 </div>
               </div>
-              {/* Small illustrated version */}
-              <div className="absolute -bottom-8 -right-8 bg-white rounded-2xl p-2 shadow-xl transform rotate-6 hover:rotate-3 transition-transform">
+              {/* Small illustrated version - hidden on very small screens */}
+              <div className="absolute -bottom-6 -right-4 sm:-bottom-8 sm:-right-8 bg-white rounded-xl sm:rounded-2xl p-1.5 sm:p-2 shadow-xl transform rotate-6 hover:rotate-3 transition-transform hidden xs:block">
                 <img
                   src="/images/playful/wyatt-pixar-waving.png"
                   alt="Wyatt waving"
-                  className="w-24 sm:w-28 h-auto rounded-xl"
+                  className="w-16 sm:w-24 md:w-28 h-auto rounded-lg sm:rounded-xl"
                 />
               </div>
             </div>
@@ -229,24 +229,24 @@ export function PlayfulHome() {
             </div>
 
             {/* Text */}
-            <div className="text-white space-y-6">
-              <p className="text-xl leading-relaxed">
+            <div className="text-white space-y-4 sm:space-y-6">
+              <p className="text-base sm:text-lg lg:text-xl leading-relaxed">
                 Our journey with <span className="font-bold text-yellow-300">Bardet-Biedl Syndrome</span> began before Wyatt was born. His twenty-week ultrasound showed enlarged, bright kidneys — leading us to discover we are both carriers of the BBS1 gene mutation.
               </p>
 
-              <p className="text-xl leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl leading-relaxed">
                 When we first got the news, we were devastated. But our son Wyatt is a <span className="font-bold text-yellow-300">happy, loving little boy</span>. He's 5 years old, always on the go, and loves basketball, soccer, hockey, and golf.
               </p>
 
-              <p className="text-xl leading-relaxed">
+              <p className="text-base sm:text-lg lg:text-xl leading-relaxed">
                 Wyatt was born with an extra toe — removed before his first birthday. His vision is stable now, but BBS often leads to blindness by the teenage years. Not knowing what the future holds is frightening.
               </p>
 
-              <blockquote className="relative bg-white/10 backdrop-blur rounded-2xl p-6">
-                <p className="text-lg italic relative z-10">
+              <blockquote className="relative bg-white/10 backdrop-blur rounded-xl sm:rounded-2xl p-4 sm:p-6">
+                <p className="text-sm sm:text-base lg:text-lg italic relative z-10">
                   "People like Wyatt didn't do anything wrong — they were simply born with a couple letters different in their genetic code. Science however is catching up."
                 </p>
-                <cite className="block mt-4 text-yellow-300 font-bold not-italic">— Josh & Brittany Vanden Heuvel</cite>
+                <cite className="block mt-3 sm:mt-4 text-yellow-300 font-bold not-italic text-sm sm:text-base">— Josh & Brittany Vanden Heuvel</cite>
               </blockquote>
             </div>
           </div>
@@ -261,22 +261,22 @@ export function PlayfulHome() {
       </section>
 
       {/* ===== WHAT IS BBS ===== */}
-      <section className="relative bg-white py-20 sm:py-32">
+      <section className="relative bg-white py-16 sm:py-24 lg:py-32">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-12">
-            <span className="inline-block bg-purple-100 text-purple-700 font-bold text-sm px-4 py-2 rounded-full mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <span className="inline-block bg-purple-100 text-purple-700 font-bold text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-3 sm:mb-4">
               THE CONDITION
             </span>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-800 mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-gray-800 mb-3 sm:mb-4">
               What is Bardet-Biedl Syndrome?
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto">
               BBS is a rare recessive genetic disorder presenting with a wide range of symptoms. Each child with BBS can have very different challenges.
             </p>
           </div>
 
           {/* Symptoms grid */}
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6 mb-8 sm:mb-12">
             {[
               {
                 symptom: "Progressive Vision Loss",
@@ -315,21 +315,21 @@ export function PlayfulHome() {
                 color: "from-pink-400 to-rose-500"
               },
             ].map((item) => (
-              <div key={item.symptom} className="bg-gray-50 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-                <div className={`w-12 h-12 bg-gradient-to-br ${item.color} rounded-xl flex items-center justify-center mb-4 text-2xl`}>
+              <div key={item.symptom} className="bg-gray-50 rounded-xl sm:rounded-2xl p-3 sm:p-4 lg:p-6 hover:shadow-lg transition-shadow">
+                <div className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 bg-gradient-to-br ${item.color} rounded-lg sm:rounded-xl flex items-center justify-center mb-2 sm:mb-3 lg:mb-4 text-lg sm:text-xl lg:text-2xl`}>
                   {item.icon}
                 </div>
-                <div className="font-bold text-gray-800 text-lg mb-2">{item.symptom}</div>
-                <div className="text-gray-600 text-sm leading-relaxed">{item.note}</div>
+                <div className="font-bold text-gray-800 text-sm sm:text-base lg:text-lg mb-1 sm:mb-2">{item.symptom}</div>
+                <div className="text-gray-600 text-xs sm:text-sm leading-relaxed hidden sm:block">{item.note}</div>
               </div>
             ))}
           </div>
 
           {/* The Hope Section */}
-          <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-3xl overflow-hidden">
+          <div className="bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl sm:rounded-3xl overflow-hidden">
             <div className="grid lg:grid-cols-5">
               {/* Left - Photo */}
-              <div className="lg:col-span-2 relative min-h-[250px] lg:min-h-full">
+              <div className="lg:col-span-2 relative min-h-[180px] sm:min-h-[250px] lg:min-h-full">
                 <img
                   src="/images/wyatt-bbs-3.png"
                   alt="Wyatt and his brother"
@@ -339,38 +339,38 @@ export function PlayfulHome() {
               </div>
 
               {/* Right - Content */}
-              <div className="lg:col-span-3 p-8 sm:p-12 text-white">
-                <h3 className="text-2xl sm:text-3xl font-black mb-4">Science Is Catching Up</h3>
-                <p className="text-lg leading-relaxed mb-8 text-emerald-100">
+              <div className="lg:col-span-3 p-5 sm:p-8 lg:p-12 text-white">
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-black mb-3 sm:mb-4">Science Is Catching Up</h3>
+                <p className="text-sm sm:text-base lg:text-lg leading-relaxed mb-5 sm:mb-8 text-emerald-100">
                   With the correct funding, children like Wyatt could keep their vision through gene therapy and other emerging treatments.
                 </p>
 
-                <div className="grid sm:grid-cols-2 gap-4 mb-8">
-                  <div className="bg-white rounded-2xl p-5 text-gray-800">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center text-xl">💊</div>
-                      <h4 className="font-black text-lg">Setmelanotide</h4>
+                <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-5 sm:mb-8">
+                  <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 text-gray-800">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-pink-100 rounded-full flex items-center justify-center text-lg sm:text-xl">💊</div>
+                      <h4 className="font-black text-sm sm:text-lg">Setmelanotide</h4>
                     </div>
-                    <p className="text-gray-600 text-sm">Curbing insatiable hunger and reducing obesity.</p>
+                    <p className="text-gray-600 text-xs sm:text-sm">Curbing insatiable hunger and reducing obesity.</p>
                   </div>
-                  <div className="bg-white rounded-2xl p-5 text-gray-800">
-                    <div className="flex items-center gap-3 mb-2">
-                      <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-xl">🧬</div>
-                      <h4 className="font-black text-lg">Gene Therapy</h4>
+                  <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-5 text-gray-800">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-purple-100 rounded-full flex items-center justify-center text-lg sm:text-xl">🧬</div>
+                      <h4 className="font-black text-sm sm:text-lg">Gene Therapy</h4>
                     </div>
-                    <p className="text-gray-600 text-sm">Preserving vision by targeting the retina.</p>
+                    <p className="text-gray-600 text-xs sm:text-sm">Preserving vision by targeting the retina.</p>
                   </div>
                 </div>
 
                 {/* Visual Pipeline */}
-                <div className="flex flex-wrap items-center justify-center gap-2 text-sm font-bold">
-                  <span className="bg-yellow-400 text-yellow-900 px-4 py-2 rounded-full">Funding</span>
+                <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 text-xs sm:text-sm font-bold">
+                  <span className="bg-yellow-400 text-yellow-900 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full">Funding</span>
                   <span className="text-white/60">→</span>
-                  <span className="bg-amber-400 text-amber-900 px-4 py-2 rounded-full">Research</span>
+                  <span className="bg-amber-400 text-amber-900 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full">Research</span>
                   <span className="text-white/60">→</span>
-                  <span className="bg-orange-400 text-orange-900 px-4 py-2 rounded-full">Trials</span>
+                  <span className="bg-orange-400 text-orange-900 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full">Trials</span>
                   <span className="text-white/60">→</span>
-                  <span className="bg-rose-400 text-rose-900 px-4 py-2 rounded-full">Therapies</span>
+                  <span className="bg-rose-400 text-rose-900 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full">Therapies</span>
                 </div>
               </div>
             </div>
@@ -386,34 +386,34 @@ export function PlayfulHome() {
       </section>
 
       {/* ===== EVENT ===== */}
-      <section id="event" className="relative bg-sky-50 py-20 sm:py-32">
+      <section id="event" className="relative bg-sky-50 py-16 sm:py-24 lg:py-32">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           {/* Header */}
-          <div className="text-center mb-12">
-            <span className="inline-block bg-emerald-100 text-emerald-700 font-bold text-sm px-4 py-2 rounded-full mb-4">
+          <div className="text-center mb-8 sm:mb-12">
+            <span className="inline-block bg-emerald-100 text-emerald-700 font-bold text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-3 sm:mb-4">
               5TH ANNUAL EVENT
             </span>
-            <h2 className="text-4xl sm:text-5xl font-black text-gray-800 mb-4">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-gray-800 mb-3 sm:mb-4">
               Join the Tournament
             </h2>
-            <p className="text-xl text-gray-600">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600">
               June 22, 2026 at Royal St. Patrick's Golf Course
             </p>
           </div>
 
           {/* Main event card */}
-          <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
+          <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl overflow-hidden">
             <div className="grid lg:grid-cols-5">
               {/* Left side - Details */}
-              <div className="lg:col-span-3 p-8 sm:p-12">
+              <div className="lg:col-span-3 p-5 sm:p-8 lg:p-12">
                 {/* Venue */}
-                <div className="mb-8">
-                  <h3 className="font-black text-2xl text-gray-800 mb-2">Royal St. Patrick's Golf Course</h3>
-                  <p className="text-gray-500">201 Royal Saint Pats Dr, Wrightstown, WI</p>
+                <div className="mb-6 sm:mb-8">
+                  <h3 className="font-black text-xl sm:text-2xl text-gray-800 mb-1 sm:mb-2">Royal St. Patrick's Golf Course</h3>
+                  <p className="text-gray-500 text-sm sm:text-base">201 Royal Saint Pats Dr, Wrightstown, WI</p>
                 </div>
 
                 {/* Key details grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
                   <div>
                     <div className="text-gray-400 text-sm font-medium mb-1">Date</div>
                     <div className="font-bold text-gray-800">June 22, 2026</div>
@@ -433,34 +433,34 @@ export function PlayfulHome() {
                 </div>
 
                 {/* Pricing */}
-                <div className="flex flex-wrap gap-4 mb-8">
-                  <div className="bg-emerald-50 rounded-2xl px-6 py-4">
-                    <div className="text-emerald-600 text-sm font-medium">Individual</div>
-                    <div className="font-black text-2xl text-emerald-700">$150</div>
+                <div className="flex flex-wrap gap-3 sm:gap-4 mb-6 sm:mb-8">
+                  <div className="bg-emerald-50 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4">
+                    <div className="text-emerald-600 text-xs sm:text-sm font-medium">Individual</div>
+                    <div className="font-black text-xl sm:text-2xl text-emerald-700">$150</div>
                   </div>
-                  <div className="bg-amber-50 rounded-2xl px-6 py-4">
-                    <div className="text-amber-600 text-sm font-medium">Foursome</div>
-                    <div className="font-black text-2xl text-amber-700">$550</div>
+                  <div className="bg-amber-50 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4">
+                    <div className="text-amber-600 text-xs sm:text-sm font-medium">Foursome</div>
+                    <div className="font-black text-xl sm:text-2xl text-amber-700">$550</div>
                   </div>
-                  <div className="bg-gray-50 rounded-2xl px-6 py-4">
-                    <div className="text-gray-500 text-sm font-medium">Includes</div>
-                    <div className="font-bold text-gray-700">Lunch & Dinner</div>
+                  <div className="bg-gray-50 rounded-xl sm:rounded-2xl px-4 sm:px-6 py-3 sm:py-4">
+                    <div className="text-gray-500 text-xs sm:text-sm font-medium">Includes</div>
+                    <div className="font-bold text-sm sm:text-base text-gray-700">Lunch & Dinner</div>
                   </div>
                 </div>
 
                 {/* CTAs */}
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <a
                     href="https://secure.givelively.org/event/bardet-biedl-syndrome-foundation/2026-birdies-for-bbs"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white font-black text-lg px-8 py-4 rounded-full text-center shadow-lg hover:shadow-xl transition-all"
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white font-black text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-full text-center shadow-lg hover:shadow-xl transition-all"
                   >
                     Register Now
                   </a>
                   <a
                     href="#sponsors"
-                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-lg px-8 py-4 rounded-full text-center transition"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-full text-center transition"
                   >
                     Become a Sponsor
                   </a>
@@ -509,23 +509,22 @@ export function PlayfulHome() {
           </div>
 
           {/* Registration Options - Fun Cards */}
-          <div className="grid md:grid-cols-2 gap-8 mb-20">
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 mb-12 sm:mb-20">
             {/* Individual Golfer */}
-            <div className="group relative bg-white rounded-[2rem] p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
-              {/* Golf ball accent */}
+            <div className="group relative bg-white rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
               <div>
-                <div className="flex items-end justify-between mb-6">
+                <div className="flex items-end justify-between mb-4 sm:mb-6">
                   <div>
-                    <h3 className="font-black text-gray-800 text-2xl">Solo Golfer</h3>
-                    <p className="text-emerald-600 font-semibold">Hit the course</p>
+                    <h3 className="font-black text-gray-800 text-xl sm:text-2xl">Solo Golfer</h3>
+                    <p className="text-emerald-600 font-semibold text-sm sm:text-base">Hit the course</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-4xl font-black text-emerald-500">$150</div>
+                    <div className="text-3xl sm:text-4xl font-black text-emerald-500">$150</div>
                   </div>
                 </div>
 
-                <div className="bg-emerald-50 rounded-2xl p-5 mb-6">
-                  <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="bg-emerald-50 rounded-xl sm:rounded-2xl p-4 sm:p-5 mb-4 sm:mb-6">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
                     <div className="flex items-center gap-2">
                       <span className="text-emerald-500">⛳</span>
                       <span className="text-gray-700">18 holes</span>
@@ -549,7 +548,7 @@ export function PlayfulHome() {
                   href="https://secure.givelively.org/event/bardet-biedl-syndrome-foundation/2026-birdies-for-bbs"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black text-lg text-center py-4 rounded-full transition shadow-lg hover:shadow-xl"
+                  className="block w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black text-base sm:text-lg text-center py-3 sm:py-4 rounded-full transition shadow-lg hover:shadow-xl"
                 >
                   Sign Me Up!
                 </a>
@@ -557,26 +556,26 @@ export function PlayfulHome() {
             </div>
 
             {/* Foursome */}
-            <div className="group relative bg-gradient-to-br from-amber-400 to-yellow-400 rounded-[2rem] p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
+            <div className="group relative bg-gradient-to-br from-amber-400 to-yellow-400 rounded-2xl sm:rounded-[2rem] p-5 sm:p-8 shadow-xl hover:shadow-2xl transition-all hover:-translate-y-2">
               {/* Best value ribbon */}
-              <div className="absolute -top-3 -right-3 bg-rose-500 text-white text-xs font-black px-4 py-2 rounded-full shadow-lg transform rotate-12">
+              <div className="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-rose-500 text-white text-[10px] sm:text-xs font-black px-3 sm:px-4 py-1.5 sm:py-2 rounded-full shadow-lg transform rotate-12">
                 BEST VALUE!
               </div>
 
-              <div className="pt-4">
-                <div className="flex items-end justify-between mb-6">
+              <div className="pt-2 sm:pt-4">
+                <div className="flex items-end justify-between mb-4 sm:mb-6">
                   <div>
-                    <h3 className="font-black text-gray-800 text-2xl">Foursome</h3>
-                    <p className="text-amber-800 font-semibold">Bring your crew!</p>
+                    <h3 className="font-black text-gray-800 text-xl sm:text-2xl">Foursome</h3>
+                    <p className="text-amber-800 font-semibold text-sm sm:text-base">Bring your crew!</p>
                   </div>
                   <div className="text-right">
-                    <div className="text-4xl font-black text-gray-800">$550</div>
-                    <div className="text-sm font-bold text-amber-800">Save $50!</div>
+                    <div className="text-3xl sm:text-4xl font-black text-gray-800">$550</div>
+                    <div className="text-xs sm:text-sm font-bold text-amber-800">Save $50!</div>
                   </div>
                 </div>
 
-                <div className="bg-white/40 backdrop-blur rounded-2xl p-5 mb-6">
-                  <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="bg-white/40 backdrop-blur rounded-xl sm:rounded-2xl p-4 sm:p-5 mb-4 sm:mb-6">
+                  <div className="grid grid-cols-2 gap-2 sm:gap-3 text-xs sm:text-sm">
                     <div className="flex items-center gap-2">
                       <span>👥</span>
                       <span className="text-gray-800 font-medium">4 golfers</span>
@@ -610,69 +609,69 @@ export function PlayfulHome() {
 
           {/* Sponsorship Section */}
           <div className="relative">
-            <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-[2.5rem] overflow-hidden">
+            <div className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl sm:rounded-[2.5rem] overflow-hidden">
               <div className="grid lg:grid-cols-3">
                 {/* Left - Photo */}
-                <div className="relative min-h-[200px] lg:min-h-full">
+                <div className="relative min-h-[180px] sm:min-h-[200px] lg:min-h-full">
                   <img
                     src="/images/wyatt-bbs-1.png"
                     alt="Wyatt and his brother"
                     className="absolute inset-0 w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent lg:bg-gradient-to-r" />
-                  <div className="absolute bottom-4 left-4 lg:bottom-6 lg:left-6">
-                    <p className="text-white font-bold text-lg">Support Wyatt's Journey</p>
+                  <div className="absolute bottom-3 left-3 sm:bottom-4 sm:left-4 lg:bottom-6 lg:left-6">
+                    <p className="text-white font-bold text-base sm:text-lg">Support Wyatt's Journey</p>
                   </div>
                 </div>
 
                 {/* Right - Content */}
-                <div className="lg:col-span-2 p-8 sm:p-12 text-white">
-                  <div className="text-center lg:text-left mb-8">
-                    <h3 className="text-3xl sm:text-4xl font-black mb-2">Be a Sponsor!</h3>
-                    <p className="text-gray-400 text-lg">Get your business recognized while supporting BBS research</p>
+                <div className="lg:col-span-2 p-5 sm:p-8 lg:p-12 text-white">
+                  <div className="text-center lg:text-left mb-6 sm:mb-8">
+                    <h3 className="text-2xl sm:text-3xl lg:text-4xl font-black mb-2">Be a Sponsor!</h3>
+                    <p className="text-gray-400 text-sm sm:text-base lg:text-lg">Get your business recognized while supporting BBS research</p>
                   </div>
 
-                  <div className="grid sm:grid-cols-2 gap-4 mb-8">
+                  <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
                     {/* Hole Sponsor */}
-                    <div className="bg-white rounded-2xl p-6 text-gray-800">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center text-2xl">🚩</div>
+                    <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 text-gray-800">
+                      <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-amber-100 rounded-full flex items-center justify-center text-xl sm:text-2xl">🚩</div>
                         <div>
-                          <h4 className="font-black text-lg">Hole Sponsor</h4>
-                          <p className="text-gray-500 text-sm">Course Recognition</p>
+                          <h4 className="font-black text-base sm:text-lg">Hole Sponsor</h4>
+                          <p className="text-gray-500 text-xs sm:text-sm">Course Recognition</p>
                         </div>
                       </div>
-                      <div className="text-3xl font-black text-emerald-600 mb-3">$600</div>
-                      <p className="text-gray-600 text-sm mb-4">Your business sign at a designated hole.</p>
+                      <div className="text-2xl sm:text-3xl font-black text-emerald-600 mb-2 sm:mb-3">$600</div>
+                      <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4">Your business sign at a designated hole.</p>
                       <a
                         href="https://secure.givelively.org/event/bardet-biedl-syndrome-foundation/2026-birdies-for-bbs"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-center py-3 rounded-full transition"
+                        className="block w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-center text-sm sm:text-base py-2.5 sm:py-3 rounded-full transition"
                       >
                         Sponsor a Hole
                       </a>
                     </div>
 
                     {/* Sponsorship Team */}
-                    <div className="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl p-6 text-white relative">
-                      <div className="absolute -top-2 -right-2 bg-rose-500 text-white text-xs font-black px-3 py-1 rounded-full shadow-lg">
+                    <div className="bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-white relative">
+                      <div className="absolute -top-2 -right-2 bg-rose-500 text-white text-[10px] sm:text-xs font-black px-2 sm:px-3 py-1 rounded-full shadow-lg">
                         BEST DEAL
                       </div>
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-2xl">🏆</div>
+                      <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/20 rounded-full flex items-center justify-center text-xl sm:text-2xl">🏆</div>
                         <div>
-                          <h4 className="font-black text-lg">Sponsorship Team</h4>
-                          <p className="text-emerald-100 text-sm">Play + Sponsor</p>
+                          <h4 className="font-black text-base sm:text-lg">Sponsorship Team</h4>
+                          <p className="text-emerald-100 text-xs sm:text-sm">Play + Sponsor</p>
                         </div>
                       </div>
-                      <div className="text-3xl font-black mb-3">$1,000</div>
-                      <p className="text-emerald-100 text-sm mb-4">Foursome + hole sponsor + all meals!</p>
+                      <div className="text-2xl sm:text-3xl font-black mb-2 sm:mb-3">$1,000</div>
+                      <p className="text-emerald-100 text-xs sm:text-sm mb-3 sm:mb-4">Foursome + hole sponsor + all meals!</p>
                       <a
                         href="https://secure.givelively.org/event/bardet-biedl-syndrome-foundation/2026-birdies-for-bbs"
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="block w-full bg-white text-emerald-600 font-bold text-center py-3 rounded-full hover:bg-gray-100 transition"
+                        className="block w-full bg-white text-emerald-600 font-bold text-center text-sm sm:text-base py-2.5 sm:py-3 rounded-full hover:bg-gray-100 transition"
                       >
                         Get the Best Package
                       </a>
@@ -680,10 +679,10 @@ export function PlayfulHome() {
                   </div>
 
                   {/* Last year stats */}
-                  <div className="bg-white/10 rounded-2xl p-6 text-center">
-                    <p className="text-gray-400 text-sm mb-1">Last year we raised</p>
-                    <p className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">$23,500+</p>
-                    <p className="text-white font-bold mt-2">Help us beat it this year!</p>
+                  <div className="bg-white/10 rounded-xl sm:rounded-2xl p-4 sm:p-6 text-center">
+                    <p className="text-gray-400 text-xs sm:text-sm mb-1">Last year we raised</p>
+                    <p className="text-3xl sm:text-4xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">$23,500+</p>
+                    <p className="text-white font-bold text-sm sm:text-base mt-1 sm:mt-2">Help us beat it this year!</p>
                   </div>
                 </div>
               </div>
@@ -693,10 +692,10 @@ export function PlayfulHome() {
       </section>
 
       {/* ===== DONATE CTA ===== */}
-      <section id="donate" className="relative bg-gray-900 py-20 sm:py-32 overflow-hidden">
-        {/* Animated stars */}
+      <section id="donate" className="relative bg-gray-900 py-16 sm:py-24 lg:py-32 overflow-hidden">
+        {/* Animated stars - fewer on mobile */}
         <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
+          {[...Array(12)].map((_, i) => (
             <div
               key={i}
               className="absolute w-1 h-1 bg-white rounded-full animate-twinkle"
@@ -709,41 +708,41 @@ export function PlayfulHome() {
           ))}
         </div>
 
-        {/* Glow effects */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl" />
+        {/* Glow effects - smaller on mobile */}
+        <div className="absolute top-1/4 left-1/4 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-emerald-500/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-48 sm:w-72 lg:w-96 h-48 sm:h-72 lg:h-96 bg-pink-500/20 rounded-full blur-3xl" />
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
-          <div className="inline-block bg-white/10 backdrop-blur rounded-3xl p-4 mb-10">
+          <div className="inline-block bg-white/10 backdrop-blur rounded-2xl sm:rounded-3xl p-3 sm:p-4 mb-6 sm:mb-10">
             <img
               src="/images/playful/wyatt-pixar-celebrating.png"
               alt="Wyatt celebrating"
-              className="w-44 sm:w-56 h-auto rounded-2xl"
+              className="w-36 sm:w-44 md:w-56 h-auto rounded-xl sm:rounded-2xl"
             />
           </div>
 
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-white mb-4 sm:mb-6">
             Help Wyatt<br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-rose-400">See His Future</span>
           </h2>
 
-          <p className="text-xl text-gray-300 mb-6 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-4 sm:mb-6 max-w-2xl mx-auto leading-relaxed">
             <span className="text-white font-bold">100% of your proceeds</span> go to the Bardet-Biedl Syndrome Foundation — a 501(c)(3) non-profit funding research to drive therapies for BBS forward.
           </p>
 
-          <p className="text-lg text-gray-400 mb-10 max-w-2xl mx-auto">
+          <p className="text-sm sm:text-base lg:text-lg text-gray-400 mb-8 sm:mb-10 max-w-2xl mx-auto">
             Every dollar brings us closer to therapies that could save Wyatt's sight.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2 sm:px-0">
             <a
               href="https://www.bardetbiedl.org/donate"
               target="_blank"
               rel="noopener noreferrer"
-              className="group relative bg-gradient-to-r from-pink-500 to-rose-500 text-white font-black text-xl px-12 py-6 rounded-full shadow-2xl shadow-pink-500/30 hover:shadow-pink-500/50 hover:-translate-y-1 transition-all"
+              className="group relative bg-gradient-to-r from-pink-500 to-rose-500 text-white font-black text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 rounded-full shadow-2xl shadow-pink-500/30 hover:shadow-pink-500/50 hover:-translate-y-1 transition-all"
             >
-              <span className="flex items-center justify-center gap-3">
-                <HeartIcon className="w-6 h-6 group-hover:scale-125 transition-transform" />
+              <span className="flex items-center justify-center gap-2 sm:gap-3">
+                <HeartIcon className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-125 transition-transform" />
                 Donate Now
               </span>
             </a>
@@ -751,16 +750,16 @@ export function PlayfulHome() {
               href="https://secure.givelively.org/event/bardet-biedl-syndrome-foundation/2026-birdies-for-bbs"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white/10 backdrop-blur text-white font-bold text-xl px-12 py-6 rounded-full hover:bg-white/20 transition"
+              className="bg-white/10 backdrop-blur text-white font-bold text-base sm:text-lg lg:text-xl px-8 sm:px-10 lg:px-12 py-4 sm:py-5 lg:py-6 rounded-full hover:bg-white/20 transition"
             >
               Join Tournament
             </a>
           </div>
 
           {/* Contact for raffle donations */}
-          <div className="mt-12 bg-white/5 backdrop-blur rounded-2xl p-6 max-w-md mx-auto">
-            <p className="text-gray-300 text-center">
-              <span className="block text-white font-bold mb-2">Want to donate for our raffle?</span>
+          <div className="mt-8 sm:mt-12 bg-white/5 backdrop-blur rounded-xl sm:rounded-2xl p-4 sm:p-6 max-w-md mx-auto">
+            <p className="text-gray-300 text-center text-sm sm:text-base">
+              <span className="block text-white font-bold mb-1 sm:mb-2">Want to donate for our raffle?</span>
               Contact Josh Vanden Heuvel at{" "}
               <a href="tel:920-427-6504" className="text-emerald-400 font-bold hover:text-emerald-300 transition">
                 920-427-6504
@@ -771,35 +770,35 @@ export function PlayfulHome() {
       </section>
 
       {/* ===== FOOTER ===== */}
-      <footer className="bg-gray-900 border-t border-gray-800 py-16">
+      <footer className="bg-gray-900 border-t border-gray-800 py-10 sm:py-12 lg:py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="grid md:grid-cols-3 gap-12 mb-12">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-12">
             {/* Brand */}
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <img src="/images/logo.png" alt="Birdies for BBS" className="h-12 w-auto" />
-                <span className="font-black text-white text-lg">Birdies for BBS</span>
+            <div className="sm:col-span-2 md:col-span-1">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <img src="/images/logo.png" alt="Birdies for BBS" className="h-10 sm:h-12 w-auto" />
+                <span className="font-black text-white text-base sm:text-lg">Birdies for BBS</span>
               </div>
-              <p className="text-gray-400 text-sm leading-relaxed">
+              <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
                 A charity golf tournament supporting the Bardet-Biedl Syndrome Foundation. 100% of proceeds fund BBS research.
               </p>
             </div>
 
             {/* Quick Links */}
             <div>
-              <h4 className="font-bold text-white mb-4">Quick Links</h4>
-              <div className="space-y-2">
-                <a href="#story" className="block text-gray-400 hover:text-emerald-400 transition">Meet Wyatt</a>
-                <a href="#event" className="block text-gray-400 hover:text-emerald-400 transition">Event Details</a>
-                <a href="#sponsors" className="block text-gray-400 hover:text-emerald-400 transition">Register / Sponsor</a>
-                <a href="#donate" className="block text-gray-400 hover:text-emerald-400 transition">Donate</a>
+              <h4 className="font-bold text-white mb-3 sm:mb-4 text-sm sm:text-base">Quick Links</h4>
+              <div className="space-y-1.5 sm:space-y-2">
+                <a href="#story" className="block text-gray-400 hover:text-emerald-400 transition text-sm">Meet Wyatt</a>
+                <a href="#event" className="block text-gray-400 hover:text-emerald-400 transition text-sm">Event Details</a>
+                <a href="#sponsors" className="block text-gray-400 hover:text-emerald-400 transition text-sm">Register / Sponsor</a>
+                <a href="#donate" className="block text-gray-400 hover:text-emerald-400 transition text-sm">Donate</a>
               </div>
             </div>
 
             {/* Contact & Foundation */}
             <div>
-              <h4 className="font-bold text-white mb-4">Learn More</h4>
-              <div className="space-y-2 text-sm">
+              <h4 className="font-bold text-white mb-3 sm:mb-4 text-sm sm:text-base">Learn More</h4>
+              <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
                 <a
                   href="https://www.bardetbiedl.org"
                   target="_blank"
@@ -816,7 +815,7 @@ export function PlayfulHome() {
                 >
                   Official Birdies for BBS Page →
                 </a>
-                <p className="text-gray-500 pt-2">
+                <p className="text-gray-500 pt-1 sm:pt-2">
                   Questions? Contact Josh at{" "}
                   <a href="tel:920-427-6504" className="text-emerald-400 hover:text-emerald-300">
                     920-427-6504
@@ -826,14 +825,14 @@ export function PlayfulHome() {
             </div>
           </div>
 
-          <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-gray-500 text-sm">
+          <div className="border-t border-gray-800 pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+            <p className="text-gray-500 text-xs sm:text-sm text-center sm:text-left">
               © 2026 Birdies for BBS. All proceeds benefit the{" "}
               <a href="https://www.bardetbiedl.org" target="_blank" rel="noopener noreferrer" className="text-emerald-400 hover:text-emerald-300">
                 Bardet-Biedl Syndrome Foundation
               </a>
             </p>
-            <p className="text-gray-600 text-sm">Made with 💚 for Wyatt</p>
+            <p className="text-gray-600 text-xs sm:text-sm">Made with 💚 for Wyatt</p>
           </div>
         </div>
       </footer>

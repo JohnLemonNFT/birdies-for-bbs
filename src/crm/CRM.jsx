@@ -1,14 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
+import { supabase } from "../lib/supabase";
+import { useAuth } from "../lib/auth";
 import {
   CATEGORIES,
   STATUS_CONFIG,
   TIERS,
   TEMPLATES,
-  SEED_BUSINESSES,
   getTemplateForCategory,
 } from "../data/crm-businesses";
-
-const STORAGE_KEY = "bbs-crm-data";
 
 // Status colors for light theme
 const STATUS_COLORS = {
@@ -433,6 +432,192 @@ function AddBusinessForm({ onAdd, onClose }) {
   );
 }
 
+// --- Contacts Tab ---
+const CONTACT_TYPES = {
+  golfer: { label: "Golfer", icon: "⛳" },
+  sponsor: { label: "Sponsor", icon: "🏆" },
+  donor: { label: "Donor", icon: "💚" },
+  volunteer: { label: "Volunteer", icon: "🙋" },
+  raffle_donor: { label: "Raffle Donor", icon: "🎁" },
+  other: { label: "Other", icon: "👤" },
+};
+
+function ContactsView({ contacts }) {
+  const [search, setSearch] = useState("");
+  const [filterType, setFilterType] = useState("all");
+
+  const filtered = contacts.filter((c) => {
+    const matchSearch = !search ||
+      (c.name && c.name.toLowerCase().includes(search.toLowerCase())) ||
+      (c.email && c.email.toLowerCase().includes(search.toLowerCase())) ||
+      (c.company && c.company.toLowerCase().includes(search.toLowerCase()));
+    const matchType = filterType === "all" || c.type === filterType;
+    return matchSearch && matchType;
+  });
+
+  const exportCSV = () => {
+    const headers = ["Name", "Email", "Phone", "Company", "Type", "Source", "Notes"];
+    const rows = contacts.map((c) => [
+      c.name || "",
+      c.email || "",
+      c.phone || "",
+      c.company || "",
+      c.type || "",
+      c.source || "",
+      (c.notes || "").replace(/"/g, '""'),
+    ]);
+    const csv = [headers, ...rows].map((r) => r.map((v) => `"${v}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `birdies-contacts-${new Date().toISOString().split("T")[0]}.csv`;
+    a.click();
+  };
+
+  return (
+    <div>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-bold text-gray-900">Email List</h2>
+        <button
+          onClick={exportCSV}
+          className="px-4 py-2 rounded-lg text-sm font-semibold bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+        >
+          Export CSV
+        </button>
+      </div>
+
+      <input
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search contacts..."
+        className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 text-base mb-4 focus:outline-none focus:border-blue-400 placeholder:text-gray-300"
+      />
+
+      <div className="flex gap-3 mb-5 flex-wrap items-center">
+        <select
+          value={filterType}
+          onChange={(e) => setFilterType(e.target.value)}
+          className="px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-white text-gray-700 text-base font-medium focus:outline-none focus:border-blue-400"
+        >
+          <option value="all">All Types</option>
+          {Object.entries(CONTACT_TYPES).map(([k, v]) => (
+            <option key={k} value={k}>{v.icon} {v.label}</option>
+          ))}
+        </select>
+        <span className="text-base text-gray-400 font-medium ml-auto">
+          {filtered.length} contacts
+        </span>
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="text-center py-16 text-gray-400 text-lg">
+          {contacts.length === 0 ? "No contacts yet. Add your first contact!" : "No contacts match your search."}
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {filtered.map((c) => (
+            <div key={c.id} className="bg-white rounded-xl p-4 border-2 border-gray-200">
+              <div className="flex justify-between items-start">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-base font-bold text-gray-900">{c.name || c.email}</span>
+                    <span className="text-sm px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">
+                      {CONTACT_TYPES[c.type]?.icon} {CONTACT_TYPES[c.type]?.label || "Other"}
+                    </span>
+                  </div>
+                  <div className="text-sm text-gray-500">{c.email}</div>
+                  {c.company && <div className="text-sm text-gray-400">{c.company}</div>}
+                </div>
+                <div className="flex gap-2 shrink-0 ml-3">
+                  {c.phone && (
+                    <a
+                      href={`tel:${c.phone.replace(/\D/g, "")}`}
+                      className="w-10 h-10 rounded-lg flex items-center justify-center bg-green-50 hover:bg-green-100 transition-colors text-base"
+                    >
+                      📞
+                    </a>
+                  )}
+                  <a
+                    href={`mailto:${c.email}`}
+                    className="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-50 hover:bg-blue-100 transition-colors text-base"
+                  >
+                    ✉️
+                  </a>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- Add Contact Form ---
+function AddContactForm({ onAdd, onClose }) {
+  const [form, setForm] = useState({
+    name: "", email: "", phone: "", company: "", type: "other", source: "manual", notes: "",
+  });
+
+  const handleSubmit = () => {
+    if (!form.email.trim()) return;
+    onAdd(form);
+    onClose();
+  };
+
+  const inputClass = "w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:border-blue-400";
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-[2000] flex items-center justify-center p-5">
+      <div className="bg-white rounded-2xl p-7 max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl">
+        <h3 className="text-xl font-bold text-gray-900 mb-5">Add Contact</h3>
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Email *</label>
+        <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputClass} placeholder="email@example.com" type="email" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Name</label>
+        <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputClass} placeholder="John Smith" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Phone</label>
+        <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputClass} placeholder="(920) 555-1234" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Company</label>
+        <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className={inputClass} placeholder="Company name" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Type</label>
+        <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })} className={inputClass}>
+          {Object.entries(CONTACT_TYPES).map(([k, v]) => (
+            <option key={k} value={k}>{v.icon} {v.label}</option>
+          ))}
+        </select>
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Source</label>
+        <select value={form.source} onChange={(e) => setForm({ ...form, source: e.target.value })} className={inputClass}>
+          <option value="manual">Manual Entry</option>
+          <option value="website_signup">Website Signup</option>
+          <option value="tournament_2024">2024 Tournament</option>
+          <option value="tournament_2025">2025 Tournament</option>
+          <option value="tournament_2026">2026 Tournament</option>
+          <option value="referral">Referral</option>
+        </select>
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Notes</label>
+        <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={3} className={`${inputClass} resize-y`} />
+
+        <div className="flex gap-3 mt-6">
+          <button onClick={handleSubmit} className="flex-1 py-3.5 rounded-xl font-bold text-base bg-green-600 text-white hover:bg-green-700 transition-colors">
+            Add Contact
+          </button>
+          <button onClick={onClose} className="flex-1 py-3.5 rounded-xl font-bold text-base border-2 border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // --- Templates Tab ---
 function TemplateView() {
   const [active, setActive] = useState("cold_email");
@@ -492,55 +677,138 @@ function TemplateView() {
 
 // --- Main CRM Component ---
 export default function CRM() {
+  const { signOut } = useAuth();
   const [businesses, setBusinesses] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [tab, setTab] = useState("dashboard");
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterCategory, setFilterCategory] = useState("all");
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showAddContact, setShowAddContact] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [toast, setToast] = useState("");
   const goal = 25000;
 
+  // Load data from Supabase
   useEffect(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        if (parsed.businesses && parsed.businesses.length > 0) {
-          const existingIds = new Set(parsed.businesses.map((b) => b.id));
-          const newFromSeed = SEED_BUSINESSES.filter((b) => !existingIds.has(b.id));
-          setBusinesses([...parsed.businesses, ...newFromSeed]);
-          setLoaded(true);
-          return;
-        }
-      }
-    } catch (e) {}
-    setBusinesses(SEED_BUSINESSES);
-    setLoaded(true);
-  }, []);
+    async function loadData() {
+      // Load businesses
+      const { data: bizData, error: bizError } = await supabase
+        .from("businesses")
+        .select("*")
+        .order("name", { ascending: true });
 
-  useEffect(() => {
-    if (!loaded) return;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({ businesses, goal }));
-    } catch (e) {
-      console.error("Save failed", e);
+      if (bizError) {
+        console.error("Error loading businesses:", bizError);
+      } else {
+        setBusinesses(bizData || []);
+      }
+
+      // Load contacts
+      const { data: contactData, error: contactError } = await supabase
+        .from("contacts")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (!contactError && contactData) {
+        setContacts(contactData);
+      }
+
+      setLoaded(true);
     }
-  }, [businesses, loaded]);
+    loadData();
+  }, []);
 
   const showToast = (msg) => {
     setToast(msg);
     setTimeout(() => setToast(""), 2500);
   };
 
-  const updateBusiness = useCallback((updated) => {
+  const updateBusiness = useCallback(async (updated) => {
+    // Update local state immediately
     setBusinesses((prev) => prev.map((b) => (b.id === updated.id ? updated : b)));
+
+    // Update in Supabase
+    const { error } = await supabase
+      .from("businesses")
+      .update({
+        name: updated.name,
+        category: updated.category,
+        phone: updated.phone,
+        email: updated.email,
+        website: updated.website,
+        address: updated.address,
+        notes: updated.notes,
+        status: updated.status,
+        tier: updated.tier,
+        amount: updated.amount,
+        contact_date: updated.contactDate || updated.contact_date,
+      })
+      .eq("id", updated.id);
+
+    if (error) {
+      console.error("Error updating business:", error);
+      showToast("Error saving changes");
+    }
   }, []);
 
-  const addBusiness = useCallback((newBiz) => {
-    setBusinesses((prev) => [newBiz, ...prev]);
+  const addBusiness = useCallback(async (newBiz) => {
+    // Insert into Supabase
+    const { data, error } = await supabase
+      .from("businesses")
+      .insert({
+        name: newBiz.name,
+        category: newBiz.category,
+        phone: newBiz.phone,
+        email: newBiz.email,
+        website: newBiz.website,
+        address: newBiz.address,
+        notes: newBiz.notes,
+        status: newBiz.status || "not_contacted",
+        tier: newBiz.tier,
+        amount: newBiz.amount || 0,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error adding business:", error);
+      showToast("Error adding business");
+      return;
+    }
+
+    setBusinesses((prev) => [data, ...prev]);
     showToast(`Added ${newBiz.name}`);
+  }, []);
+
+  const addContact = useCallback(async (newContact) => {
+    const { data, error } = await supabase
+      .from("contacts")
+      .insert({
+        email: newContact.email,
+        name: newContact.name,
+        phone: newContact.phone,
+        company: newContact.company,
+        type: newContact.type || "other",
+        source: newContact.source || "manual",
+        notes: newContact.notes,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error adding contact:", error);
+      if (error.code === "23505") {
+        showToast("Email already exists");
+      } else {
+        showToast("Error adding contact");
+      }
+      return;
+    }
+
+    setContacts((prev) => [data, ...prev]);
+    showToast(`Added ${newContact.name || newContact.email}`);
   }, []);
 
   const filteredBiz = businesses.filter((b) => {
@@ -552,7 +820,8 @@ export default function CRM() {
 
   const tabConfig = [
     { id: "dashboard", label: "Dashboard" },
-    { id: "directory", label: "Directory" },
+    { id: "directory", label: "Sponsors" },
+    { id: "contacts", label: "Contacts" },
     { id: "templates", label: "Templates" },
   ];
 
@@ -566,19 +835,28 @@ export default function CRM() {
               <h1 className="text-2xl font-bold text-gray-900">W.Y.A.T.T.</h1>
               <p className="text-sm text-gray-400">Wyatt's Year-round Action & Tracking Tool</p>
             </div>
-            <button
-              onClick={() => setShowAddForm(true)}
-              className="px-5 py-2.5 rounded-xl font-bold text-base bg-green-600 text-white hover:bg-green-700 transition-colors"
-            >
-              + Add
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => tab === "contacts" ? setShowAddContact(true) : setShowAddForm(true)}
+                className="px-5 py-2.5 rounded-xl font-bold text-base bg-green-600 text-white hover:bg-green-700 transition-colors"
+              >
+                + Add
+              </button>
+              <button
+                onClick={signOut}
+                className="px-4 py-2.5 rounded-xl font-bold text-base text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
+                title="Sign Out"
+              >
+                ↪
+              </button>
+            </div>
           </div>
           <div className="flex gap-1 bg-gray-100 rounded-xl p-1">
             {tabConfig.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`flex-1 py-3 rounded-lg text-base font-semibold transition-colors ${
+                className={`flex-1 py-3 rounded-lg text-sm sm:text-base font-semibold transition-colors ${
                   tab === t.id
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-400 hover:text-gray-600"
@@ -639,6 +917,10 @@ export default function CRM() {
           </div>
         )}
 
+        {tab === "contacts" && (
+          <ContactsView contacts={contacts} />
+        )}
+
         {tab === "templates" && <TemplateView />}
       </div>
 
@@ -651,6 +933,10 @@ export default function CRM() {
 
       {showAddForm && (
         <AddBusinessForm onAdd={addBusiness} onClose={() => setShowAddForm(false)} />
+      )}
+
+      {showAddContact && (
+        <AddContactForm onAdd={addContact} onClose={() => setShowAddContact(false)} />
       )}
     </div>
   );

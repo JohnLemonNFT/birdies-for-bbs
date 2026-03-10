@@ -1,40 +1,34 @@
 import { Routes, Route } from "react-router-dom";
-import { Nav } from "./components/Nav";
-import { Hero } from "./components/Hero";
-import { Story } from "./components/Story";
-import { AboutBBS } from "./components/AboutBBS";
-import { EventDetails } from "./components/EventDetails";
-import { Sponsors } from "./components/Sponsors";
-import { SponsorLogos } from "./components/SponsorLogos";
-import { WaysToHelp } from "./components/WaysToHelp";
-import { ContactForm } from "./components/ContactForm";
-import { Footer } from "./components/Footer";
+import { AuthProvider, useAuth } from "./lib/auth";
+import { Login } from "./components/Login";
 import CRM from "./crm/CRM";
 import { PlayfulHome } from "./components/playful/PlayfulHome";
 
-function LandingPage() {
-  return (
-    <div className="bg-black">
-      <Nav />
-      <Hero />
-      <Story />
-      <AboutBBS />
-      <EventDetails />
-      <Sponsors />
-      <SponsorLogos />
-      <WaysToHelp />
-      <ContactForm />
-      <Footer />
-    </div>
-  );
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login />;
+  }
+
+  return children;
 }
 
 export default function App() {
   return (
-    <Routes>
-      <Route path="/" element={<LandingPage />} />
-      <Route path="/crm" element={<CRM />} />
-      <Route path="/playful" element={<PlayfulHome />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<PlayfulHome />} />
+        <Route path="/crm" element={<ProtectedRoute><CRM /></ProtectedRoute>} />
+      </Routes>
+    </AuthProvider>
   );
 }
