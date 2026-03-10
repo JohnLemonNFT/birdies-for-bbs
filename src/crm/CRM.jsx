@@ -204,9 +204,14 @@ function BusinessCard({ biz, onUpdate }) {
           <div className="flex gap-2 flex-wrap items-center">
             <CategoryTag category={biz.category} />
             <StatusBadge status={biz.status} />
+            {biz.status === "committed" && biz.amount > 0 && (
+              <span className="text-sm font-bold text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
+                ${biz.amount.toLocaleString()}
+              </span>
+            )}
             {biz.tier && (
-              <span className="text-sm font-bold text-amber-600">
-                {TIERS.find((t) => t.id === biz.tier)?.label}
+              <span className="text-xs font-semibold text-amber-600">
+                {TIERS.find((t) => t.id === biz.tier)?.label.split(" ")[0]}
               </span>
             )}
           </div>
@@ -295,15 +300,25 @@ function BusinessCard({ biz, onUpdate }) {
             </div>
           </div>
 
-          {biz.amount > 0 && (
-            <div className="mb-5">
-              <label className="text-sm text-gray-500 font-semibold block mb-2">Custom Amount ($)</label>
-              <input
-                type="number"
-                value={biz.amount}
-                onChange={(e) => onUpdate({ ...biz, amount: parseInt(e.target.value) || 0 })}
-                className="w-32 px-3 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 text-base font-medium focus:outline-none focus:border-blue-400"
-              />
+          {/* Amount - always show when committed or has tier/amount */}
+          {(biz.status === "committed" || biz.tier || biz.amount > 0) && (
+            <div className="mb-5 p-4 bg-green-50 rounded-xl border border-green-200">
+              <label className="text-sm text-green-700 font-semibold block mb-2">Amount Committed ($)</label>
+              <div className="flex items-center gap-3">
+                <span className="text-green-600 text-xl font-bold">$</span>
+                <input
+                  type="number"
+                  value={biz.amount || ""}
+                  placeholder="0"
+                  onChange={(e) => onUpdate({ ...biz, amount: parseInt(e.target.value) || 0 })}
+                  className="w-32 px-3 py-3 rounded-xl border-2 border-green-300 bg-white text-gray-900 text-xl font-bold focus:outline-none focus:border-green-500"
+                />
+              </div>
+              {biz.tier && biz.amount > 0 && (
+                <p className="text-xs text-green-600 mt-2">
+                  {TIERS.find(t => t.id === biz.tier)?.label} sponsor
+                </p>
+              )}
             </div>
           )}
 
