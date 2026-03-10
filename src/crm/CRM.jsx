@@ -618,59 +618,181 @@ function AddContactForm({ onAdd, onClose }) {
   );
 }
 
-// --- Templates Tab ---
-function TemplateView() {
-  const [active, setActive] = useState("cold_email");
-  const [copied, setCopied] = useState(false);
-  const t = TEMPLATES[active];
+// --- Playbook Tab ---
+const REVENUE_IDEAS = [
+  { title: "Mulligan Sales", desc: "$5-10 each or 'Mulligan Pack' (3 mulligans + 10 raffle tickets = $30)", potential: "$500-1,500" },
+  { title: "Mega Raffle", desc: "$20/ticket or 3 for $50. Draw at dinner for big prize.", potential: "$3,000-8,000" },
+  { title: "50/50 Drawing", desc: "Sell tickets all day, winner gets half the pot.", potential: "$500-1,500" },
+  { title: "Closest to Pin / Longest Drive", desc: "$20 entry per contest.", potential: "$400-800" },
+  { title: "Beat the Pro", desc: "Hire local pro, teams pay $50 to use their drive.", potential: "$1,000-2,500" },
+  { title: "Helicopter Ball Drop", desc: "Sell numbered balls $20-50, closest to hole wins.", potential: "$2,000-5,000" },
+  { title: "Wine/Beer Pull", desc: "$20 per pull from mystery bag (bottles $10-$100+ value).", potential: "$500-1,500" },
+  { title: "Golden Tee", desc: "$10 to hit from 50 yards closer on select holes.", potential: "$500-1,500" },
+  { title: "String Game", desc: "$5/foot of string to move ball closer to hole.", potential: "$500-1,500" },
+  { title: "Whiskey & Cigar Hole", desc: "Sponsored tasting station. Great for photos/social.", potential: "Sponsor covers" },
+];
 
-  const handleCopy = () => {
+const ACTION_ITEMS = [
+  { task: "Email alexis@bardetbiedl.org for 501(c)(3) letter, W-9, EIN", priority: "high" },
+  { task: "Apply for WI raffle licenses (Class A + B) at charitable.wi.gov", priority: "high" },
+  { task: "Contact Charity Golf International for Par 5 Pro", priority: "high" },
+  { task: "Email steve@araceagainstblindness.org to connect with ARAB family", priority: "medium" },
+  { task: "Submit to local media: FOX 11, NBC 26, WHBY, Post-Crescent", priority: "medium" },
+  { task: "Contact Rhythm Pharmaceuticals (via BBS Foundation intro)", priority: "high" },
+  { task: "Set up peer-to-peer fundraising on GiveLively", priority: "medium" },
+];
+
+const KEY_CONTACTS = [
+  { name: "BBS Foundation (Alexis)", email: "alexis@bardetbiedl.org", role: "501(c)(3) paperwork" },
+  { name: "Race Against Blindness (Steve)", email: "steve@araceagainstblindness.org", phone: "(520) 548-1807", role: "BBS family network" },
+  { name: "Charity Golf International", email: "sponsorships@charitygolfintl.com", role: "Free Par 5 Pro" },
+  { name: "Rhythm Pharmaceuticals", role: "IMCIVREE maker - pharma sponsor target" },
+];
+
+function PlaybookView() {
+  const [section, setSection] = useState("ideas");
+  const [activeTemplate, setActiveTemplate] = useState("cold_email");
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyTemplate = () => {
+    const t = TEMPLATES[activeTemplate];
     const text = t.subject ? `Subject: ${t.subject}\n\n${t.body}` : t.body;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const sections = [
+    { id: "ideas", label: "Revenue Ideas" },
+    { id: "actions", label: "Action Items" },
+    { id: "contacts", label: "Key Contacts" },
+    { id: "templates", label: "Templates" },
+  ];
+
   return (
-    <div>
-      <div className="flex gap-2 flex-wrap mb-5">
-        {Object.entries(TEMPLATES).map(([k, v]) => (
+    <div className="space-y-4">
+      {/* Section Pills */}
+      <div className="flex gap-2 flex-wrap">
+        {sections.map((s) => (
           <button
-            key={k}
-            onClick={() => { setActive(k); setCopied(false); }}
-            className={`px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-              active === k
+            key={s.id}
+            onClick={() => setSection(s.id)}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+              section === s.id
                 ? "bg-green-600 text-white"
-                : "bg-white text-gray-600 border-2 border-gray-200 hover:border-green-300"
+                : "bg-white text-gray-600 border border-gray-200"
             }`}
           >
-            {v.label}
+            {s.label}
           </button>
         ))}
       </div>
 
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-        {t.subject && (
-          <div className="mb-5">
-            <span className="text-sm text-gray-400 font-semibold">SUBJECT: </span>
-            <span className="text-base text-gray-900 font-medium">{t.subject}</span>
+      {/* Revenue Ideas */}
+      {section === "ideas" && (
+        <div className="space-y-3">
+          <p className="text-sm text-gray-500 mb-4">On-course revenue generators ranked by impact</p>
+          {REVENUE_IDEAS.map((idea, i) => (
+            <div key={i} className="bg-white rounded-xl p-4 border border-gray-200">
+              <div className="flex justify-between items-start gap-3">
+                <div>
+                  <h4 className="font-bold text-gray-900">{idea.title}</h4>
+                  <p className="text-sm text-gray-600 mt-1">{idea.desc}</p>
+                </div>
+                <span className="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full whitespace-nowrap">
+                  {idea.potential}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Action Items */}
+      {section === "actions" && (
+        <div className="space-y-3">
+          <p className="text-sm text-gray-500 mb-4">Priority tasks from the 90-day plan</p>
+          {ACTION_ITEMS.map((item, i) => (
+            <div key={i} className="bg-white rounded-xl p-4 border border-gray-200 flex items-start gap-3">
+              <span className={`mt-0.5 w-3 h-3 rounded-full flex-shrink-0 ${
+                item.priority === "high" ? "bg-red-500" : "bg-yellow-500"
+              }`} />
+              <p className="text-gray-800">{item.task}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Key Contacts */}
+      {section === "contacts" && (
+        <div className="space-y-3">
+          <p className="text-sm text-gray-500 mb-4">Important people to reach out to</p>
+          {KEY_CONTACTS.map((contact, i) => (
+            <div key={i} className="bg-white rounded-xl p-4 border border-gray-200">
+              <h4 className="font-bold text-gray-900">{contact.name}</h4>
+              <p className="text-sm text-gray-500 mt-1">{contact.role}</p>
+              <div className="flex gap-2 mt-3 flex-wrap">
+                {contact.email && (
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg font-medium"
+                  >
+                    {contact.email}
+                  </a>
+                )}
+                {contact.phone && (
+                  <a
+                    href={`tel:${contact.phone.replace(/\D/g, "")}`}
+                    className="text-sm bg-green-50 text-green-700 px-3 py-1.5 rounded-lg font-medium"
+                  >
+                    {contact.phone}
+                  </a>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Templates */}
+      {section === "templates" && (
+        <div>
+          <div className="flex gap-2 flex-wrap mb-4">
+            {Object.entries(TEMPLATES).map(([k, v]) => (
+              <button
+                key={k}
+                onClick={() => { setActiveTemplate(k); setCopied(false); }}
+                className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                  activeTemplate === k
+                    ? "bg-green-600 text-white"
+                    : "bg-white text-gray-600 border border-gray-200"
+                }`}
+              >
+                {v.label}
+              </button>
+            ))}
           </div>
-        )}
-        <pre className="text-base text-gray-800 leading-relaxed whitespace-pre-wrap break-words" style={{ fontFamily: "inherit" }}>
-          {t.body}
-        </pre>
-        <button
-          onClick={handleCopy}
-          className={`mt-6 px-6 py-3 rounded-xl font-bold text-base transition-colors ${
-            copied ? "bg-green-600 text-white" : "bg-green-600 text-white hover:bg-green-700"
-          }`}
-        >
-          {copied ? "\u2713 Copied!" : "Copy to Clipboard"}
-        </button>
-        <p className="text-sm text-gray-400 mt-3">
-          Replace [BUSINESS_NAME] and [CONTACT_NAME] before sending.
-        </p>
-      </div>
+          <div className="bg-white rounded-xl p-4 border border-gray-200">
+            {TEMPLATES[activeTemplate].subject && (
+              <div className="mb-4 pb-3 border-b border-gray-100">
+                <span className="text-xs text-gray-400 font-semibold">SUBJECT: </span>
+                <span className="text-sm text-gray-900">{TEMPLATES[activeTemplate].subject}</span>
+              </div>
+            )}
+            <pre className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap break-words" style={{ fontFamily: "inherit" }}>
+              {TEMPLATES[activeTemplate].body}
+            </pre>
+            <button
+              onClick={handleCopyTemplate}
+              className={`mt-4 w-full py-3 rounded-xl font-bold text-sm transition-colors ${
+                copied ? "bg-green-600 text-white" : "bg-green-600 text-white"
+              }`}
+            >
+              {copied ? "\u2713 Copied!" : "Copy to Clipboard"}
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -820,9 +942,9 @@ export default function CRM() {
 
   const tabConfig = [
     { id: "dashboard", label: "Dashboard" },
-    { id: "directory", label: "Sponsors" },
-    { id: "contacts", label: "Contacts" },
-    { id: "templates", label: "Templates" },
+    { id: "directory", label: "Outreach" },
+    { id: "contacts", label: "Email List" },
+    { id: "playbook", label: "Playbook" },
   ];
 
   return (
@@ -921,7 +1043,7 @@ export default function CRM() {
           <ContactsView contacts={contacts} />
         )}
 
-        {tab === "templates" && <TemplateView />}
+        {tab === "playbook" && <PlaybookView />}
       </div>
 
       {/* Toast */}
