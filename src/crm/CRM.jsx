@@ -609,7 +609,9 @@ function GolfersView({ golfers, onUpdate }) {
       (g.company && g.company.toLowerCase().includes(search.toLowerCase()));
     const matchFilter = filter === "all" ||
       (filter === "paid" && g.paid) ||
-      (filter === "unpaid" && !g.paid);
+      (filter === "unpaid" && !g.paid) ||
+      (filter === "follow_up" && g.follow_up) ||
+      (filter === "unassigned" && !g.hole_assignment);
     return matchSearch && matchFilter;
   });
 
@@ -642,11 +644,13 @@ function GolfersView({ golfers, onUpdate }) {
         className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 text-base mb-4 focus:outline-none focus:border-blue-400 placeholder:text-gray-300"
       />
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-4 flex-wrap">
         {[
           { id: "all", label: "All" },
           { id: "paid", label: "Paid" },
           { id: "unpaid", label: "Unpaid" },
+          { id: "follow_up", label: "Follow Up" },
+          { id: "unassigned", label: "No Hole" },
         ].map((f) => (
           <button
             key={f.id}
@@ -676,23 +680,26 @@ function GolfersView({ golfers, onUpdate }) {
   );
 }
 
+// Available holes for shotgun start
+const HOLES = [
+  "1A", "1B", "2A", "2B", "3A", "3B", "4A", "4B", "5A", "5B",
+  "6A", "6B", "7A", "7B", "8A", "8B", "9A", "9B", "10A", "10B",
+  "11A", "11B", "12A", "12B", "13A", "13B", "14A", "14B", "15A", "15B",
+  "16A", "16B", "17A", "17B", "18A", "18B"
+];
+
 function GolferCard({ golfer, onUpdate }) {
   const [expanded, setExpanded] = useState(false);
 
-  const togglePaid = (e) => {
+  const toggle = (field) => (e) => {
     e.stopPropagation();
-    onUpdate({ ...golfer, paid: !golfer.paid });
-  };
-
-  const toggleConfirmed = (e) => {
-    e.stopPropagation();
-    onUpdate({ ...golfer, players_confirmed: !golfer.players_confirmed });
+    onUpdate({ ...golfer, [field]: !golfer[field] });
   };
 
   return (
     <div
       className={`bg-white rounded-xl p-4 border-2 cursor-pointer transition-all ${
-        golfer.paid ? "border-green-200" : "border-gray-200"
+        golfer.paid ? "border-green-200" : golfer.follow_up ? "border-orange-200" : "border-gray-200"
       }`}
       onClick={() => setExpanded(!expanded)}
     >
@@ -700,6 +707,11 @@ function GolferCard({ golfer, onUpdate }) {
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2 mb-1">
             <span className="font-bold text-gray-900">{golfer.name}</span>
+            {golfer.hole_assignment && (
+              <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-bold">
+                {golfer.hole_assignment}
+              </span>
+            )}
             {golfer.num_players > 1 && (
               <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
                 {golfer.num_players} players
@@ -707,32 +719,22 @@ function GolferCard({ golfer, onUpdate }) {
             )}
           </div>
           {golfer.company && <div className="text-sm text-gray-500">{golfer.company}</div>}
-          <div className="flex gap-2 mt-2 flex-wrap">
-            <button
-              onClick={togglePaid}
-              className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
-                golfer.paid
-                  ? "bg-green-100 text-green-700"
-                  : "bg-gray-100 text-gray-500"
-              }`}
-            >
+          <div className="flex gap-1.5 mt-2 flex-wrap">
+            <button onClick={toggle("paid")} className={`text-xs px-2 py-1 rounded-full font-semibold ${golfer.paid ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
               {golfer.paid ? "✓ Paid" : "Unpaid"}
             </button>
-            <button
-              onClick={toggleConfirmed}
-              className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
-                golfer.players_confirmed
-                  ? "bg-blue-100 text-blue-700"
-                  : "bg-gray-100 text-gray-500"
-              }`}
-            >
-              {golfer.players_confirmed ? "✓ Confirmed" : "Unconfirmed"}
+            <button onClick={toggle("players_confirmed")} className={`text-xs px-2 py-1 rounded-full font-semibold ${golfer.players_confirmed ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-500"}`}>
+              {golfer.players_confirmed ? "✓ Confirmed" : "Pending"}
             </button>
-            {golfer.logo_received && (
-              <span className="text-xs px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 font-semibold">
-                Logo ✓
-              </span>
-            )}
+            <button onClick={toggle("emailed")} className={`text-xs px-2 py-1 rounded-full font-semibold ${golfer.emailed ? "bg-teal-100 text-teal-700" : "bg-gray-100 text-gray-500"}`}>
+              {golfer.emailed ? "✓ Emailed" : "Not Emailed"}
+            </button>
+            <button onClick={toggle("follow_up")} className={`text-xs px-2 py-1 rounded-full font-semibold ${golfer.follow_up ? "bg-orange-100 text-orange-700" : "bg-gray-100 text-gray-500"}`}>
+              {golfer.follow_up ? "⚡ Follow Up" : "No Follow Up"}
+            </button>
+            <button onClick={toggle("logo_received")} className={`text-xs px-2 py-1 rounded-full font-semibold ${golfer.logo_received ? "bg-purple-100 text-purple-700" : "bg-gray-100 text-gray-500"}`}>
+              {golfer.logo_received ? "✓ Logo" : "No Logo"}
+            </button>
           </div>
         </div>
         <div className="text-right shrink-0">
@@ -744,11 +746,23 @@ function GolferCard({ golfer, onUpdate }) {
 
       {expanded && (
         <div className="mt-4 pt-4 border-t border-gray-100" onClick={(e) => e.stopPropagation()}>
+          <div className="flex items-center gap-3 mb-3">
+            <label className="text-sm text-gray-500 font-semibold">Hole:</label>
+            <select
+              value={golfer.hole_assignment || ""}
+              onChange={(e) => onUpdate({ ...golfer, hole_assignment: e.target.value || null })}
+              className="px-3 py-2 rounded-lg border border-gray-200 text-sm font-semibold"
+            >
+              <option value="">Not assigned</option>
+              {HOLES.map((h) => <option key={h} value={h}>{h}</option>)}
+            </select>
+          </div>
           {golfer.email && (
             <a href={`mailto:${golfer.email}`} className="text-sm text-blue-600 block mb-2">
               {golfer.email}
             </a>
           )}
+          {golfer.phone && <div className="text-sm text-gray-500 mb-2">{golfer.phone}</div>}
           {golfer.notes && <p className="text-sm text-gray-500">{golfer.notes}</p>}
         </div>
       )}
@@ -1058,6 +1072,63 @@ function AddVolunteerForm({ onAdd, onClose }) {
   );
 }
 
+// --- Holes Tab (Sponsor/Game Assignments) ---
+function HolesView({ holes, golfers, onUpdate }) {
+  const getTeamsOnHole = (holeNum) => {
+    return golfers.filter(g => g.hole_assignment && g.hole_assignment.startsWith(holeNum));
+  };
+
+  return (
+    <div>
+      <p className="text-sm text-gray-500 mb-4">Manage sponsor holes and team assignments</p>
+
+      <div className="space-y-3">
+        {Array.from({ length: 18 }, (_, i) => i + 1).map((holeNum) => {
+          const hole = holes.find(h => h.hole_number === String(holeNum));
+          const teams = getTeamsOnHole(String(holeNum));
+
+          return (
+            <div key={holeNum} className="bg-white rounded-xl p-4 border border-gray-200">
+              <div className="flex justify-between items-start gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-lg font-bold text-gray-900">Hole {holeNum}</span>
+                    {hole?.sponsor_type === "contest" && (
+                      <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">Contest</span>
+                    )}
+                  </div>
+                  {hole?.sponsor_name && (
+                    <div className="text-sm font-semibold text-green-700 mt-1">{hole.sponsor_name}</div>
+                  )}
+                  {hole?.game_description && (
+                    <div className="text-sm text-blue-600 mt-1">{hole.game_description}</div>
+                  )}
+                </div>
+                <div className="text-right">
+                  {teams.length > 0 && (
+                    <div className="text-xs text-gray-500">
+                      {teams.length} team{teams.length > 1 ? "s" : ""}
+                    </div>
+                  )}
+                </div>
+              </div>
+              {teams.length > 0 && (
+                <div className="mt-2 pt-2 border-t border-gray-100 flex gap-2 flex-wrap">
+                  {teams.map((t) => (
+                    <span key={t.id} className="text-xs bg-purple-50 text-purple-700 px-2 py-1 rounded">
+                      {t.hole_assignment}: {t.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 // --- Playbook Tab ---
 const REVENUE_IDEAS = [
   { title: "Mulligan Sales", desc: "$5-10 each or 'Mulligan Pack' (3 mulligans + 10 raffle tickets = $30)", potential: "$500-1,500" },
@@ -1182,6 +1253,7 @@ export default function CRM() {
   const [golfers, setGolfers] = useState([]);
   const [raffleItems, setRaffleItems] = useState([]);
   const [volunteers, setVolunteers] = useState([]);
+  const [holeSponors, setHoleSponsors] = useState([]);
   const [tab, setTab] = useState("dashboard");
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -1240,6 +1312,13 @@ export default function CRM() {
         .select("*")
         .order("name", { ascending: true });
       if (volunteerData) setVolunteers(volunteerData);
+
+      // Load hole sponsors
+      const { data: holeData } = await supabase
+        .from("hole_sponsors")
+        .select("*")
+        .order("hole_number", { ascending: true });
+      if (holeData) setHoleSponsors(holeData);
 
       setLoaded(true);
     }
@@ -1443,9 +1522,9 @@ export default function CRM() {
     { id: "dashboard", label: "Home" },
     { id: "directory", label: "Sponsors" },
     { id: "golfers", label: "Golfers" },
+    { id: "holes", label: "Holes" },
     { id: "raffle", label: "Raffle" },
     { id: "volunteers", label: "Helpers" },
-    { id: "playbook", label: "Ideas" },
   ];
 
   return (
@@ -1552,6 +1631,10 @@ export default function CRM() {
 
         {tab === "golfers" && (
           <GolfersView golfers={golfers} onUpdate={updateGolfer} />
+        )}
+
+        {tab === "holes" && (
+          <HolesView holes={holeSponors} golfers={golfers} />
         )}
 
         {tab === "raffle" && (
