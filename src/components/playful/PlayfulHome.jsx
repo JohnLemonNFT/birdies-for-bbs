@@ -6,7 +6,7 @@ export function PlayfulHome() {
   return (
     <div className="bg-sky-100 overflow-hidden">
       {/* ===== NAV ===== */}
-      <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
+      <nav className="sticky top-0 z-50 bg-sky-100/90 sm:bg-white/80 backdrop-blur-md sm:shadow-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img src="/images/logo.png" alt="Birdies for BBS" className="h-12 w-auto" />
