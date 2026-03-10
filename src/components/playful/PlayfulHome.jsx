@@ -101,7 +101,7 @@ export function PlayfulHome() {
           </div>
 
           {/* Flag - right side, distance (smaller) */}
-          <div className="absolute bottom-16 right-[20%] sm:right-[25%] opacity-80">
+          <div className="absolute bottom-8 sm:bottom-16 right-[15%] sm:right-[25%] opacity-80">
             <svg width="25" height="35" viewBox="0 0 50 70" fill="none">
               <rect x="23" y="8" width="3" height="52" fill="#374151" />
               <path d="M26 8 L48 18 L26 28 Z" fill="#fbbf24" />
