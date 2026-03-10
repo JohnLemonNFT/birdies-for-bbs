@@ -58,7 +58,6 @@ function Dashboard({ businesses, goal }) {
     .filter((b) => b.status === "committed")
     .reduce((s, b) => s + (b.amount || 0), 0);
   const pct = Math.min(100, Math.round((totalRaised / goal) * 100));
-  const nextUp = businesses.filter((b) => b.status === "not_contacted").slice(0, 6);
 
   return (
     <div className="space-y-5">
@@ -115,41 +114,6 @@ function Dashboard({ businesses, goal }) {
         </div>
       </div>
 
-      {/* Next Up */}
-      {nextUp.length > 0 && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Next Up — Contact These</h2>
-          {nextUp.map((b) => (
-            <div
-              key={b.id}
-              className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0"
-            >
-              <div className="min-w-0 flex-1">
-                <div className="text-base font-semibold text-gray-900">{b.name}</div>
-                <div className="text-sm text-gray-500">{CATEGORIES[b.category]?.icon} {CATEGORIES[b.category]?.label}</div>
-              </div>
-              <div className="flex gap-2 shrink-0 ml-3">
-                {b.phone && (
-                  <a
-                    href={`tel:${b.phone.replace(/\D/g, "")}`}
-                    className="px-3 py-2 rounded-lg bg-green-50 text-green-700 text-sm font-semibold hover:bg-green-100 transition-colors"
-                  >
-                    Call
-                  </a>
-                )}
-                {b.email && (
-                  <a
-                    href={buildMailto(b)}
-                    className="px-3 py-2 rounded-lg bg-blue-50 text-blue-700 text-sm font-semibold hover:bg-blue-100 transition-colors"
-                  >
-                    Email
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
@@ -647,22 +611,6 @@ const REVENUE_IDEAS = [
   { title: "Whiskey & Cigar Hole", desc: "Sponsored tasting station. Great for photos/social.", potential: "Sponsor covers" },
 ];
 
-const ACTION_ITEMS = [
-  { task: "Email alexis@bardetbiedl.org for 501(c)(3) letter, W-9, EIN", priority: "high" },
-  { task: "Apply for WI raffle licenses (Class A + B) at charitable.wi.gov", priority: "high" },
-  { task: "Contact Charity Golf International for Par 5 Pro", priority: "high" },
-  { task: "Email steve@araceagainstblindness.org to connect with ARAB family", priority: "medium" },
-  { task: "Submit to local media: FOX 11, NBC 26, WHBY, Post-Crescent", priority: "medium" },
-  { task: "Contact Rhythm Pharmaceuticals (via BBS Foundation intro)", priority: "high" },
-  { task: "Set up peer-to-peer fundraising on GiveLively", priority: "medium" },
-];
-
-const KEY_CONTACTS = [
-  { name: "BBS Foundation (Alexis)", email: "alexis@bardetbiedl.org", role: "501(c)(3) paperwork" },
-  { name: "Race Against Blindness (Steve)", email: "steve@araceagainstblindness.org", phone: "(520) 548-1807", role: "BBS family network" },
-  { name: "Charity Golf International", email: "sponsorships@charitygolfintl.com", role: "Free Par 5 Pro" },
-  { name: "Rhythm Pharmaceuticals", role: "IMCIVREE maker - pharma sponsor target" },
-];
 
 function PlaybookView() {
   const [section, setSection] = useState("ideas");
@@ -679,8 +627,6 @@ function PlaybookView() {
 
   const sections = [
     { id: "ideas", label: "Revenue Ideas" },
-    { id: "actions", label: "Action Items" },
-    { id: "contacts", label: "Key Contacts" },
     { id: "templates", label: "Templates" },
   ];
 
@@ -723,51 +669,6 @@ function PlaybookView() {
         </div>
       )}
 
-      {/* Action Items */}
-      {section === "actions" && (
-        <div className="space-y-3">
-          <p className="text-sm text-gray-500 mb-4">Priority tasks from the 90-day plan</p>
-          {ACTION_ITEMS.map((item, i) => (
-            <div key={i} className="bg-white rounded-xl p-4 border border-gray-200 flex items-start gap-3">
-              <span className={`mt-0.5 w-3 h-3 rounded-full flex-shrink-0 ${
-                item.priority === "high" ? "bg-red-500" : "bg-yellow-500"
-              }`} />
-              <p className="text-gray-800">{item.task}</p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Key Contacts */}
-      {section === "contacts" && (
-        <div className="space-y-3">
-          <p className="text-sm text-gray-500 mb-4">Important people to reach out to</p>
-          {KEY_CONTACTS.map((contact, i) => (
-            <div key={i} className="bg-white rounded-xl p-4 border border-gray-200">
-              <h4 className="font-bold text-gray-900">{contact.name}</h4>
-              <p className="text-sm text-gray-500 mt-1">{contact.role}</p>
-              <div className="flex gap-2 mt-3 flex-wrap">
-                {contact.email && (
-                  <a
-                    href={`mailto:${contact.email}`}
-                    className="text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg font-medium"
-                  >
-                    {contact.email}
-                  </a>
-                )}
-                {contact.phone && (
-                  <a
-                    href={`tel:${contact.phone.replace(/\D/g, "")}`}
-                    className="text-sm bg-green-50 text-green-700 px-3 py-1.5 rounded-lg font-medium"
-                  >
-                    {contact.phone}
-                  </a>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* Templates */}
       {section === "templates" && (
