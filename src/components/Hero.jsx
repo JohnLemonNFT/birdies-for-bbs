@@ -37,7 +37,7 @@ export function Hero() {
 
       <div className="max-w-[700px] px-7 py-20 text-center relative z-10">
         <div className="mb-8">
-          <span className="font-body text-[11px] text-gold-dim tracking-[5px] uppercase">
+          <span className="font-body text-[13px] text-gold-dim tracking-[5px] uppercase">
             The Bardet-Biedl Syndrome Foundation presents
           </span>
         </div>
@@ -47,7 +47,7 @@ export function Hero() {
         <h1 className="font-heading text-[clamp(48px,9vw,96px)] text-cream leading-[0.95] mb-3 font-light tracking-tight">
           Birdies
         </h1>
-        <p className="font-body text-[13px] text-gold-dim tracking-[6px] mb-3">
+        <p className="font-body text-[15px] text-gold-dim tracking-[6px] mb-3">
           FOR
         </p>
         <h1 className="font-heading text-[clamp(48px,9vw,96px)] text-gold leading-[0.95] mb-9 font-semibold tracking-tight">
@@ -60,7 +60,7 @@ export function Hero() {
           A Charity Golf Invitational
         </p>
 
-        <p className="font-body text-[13px] text-text-dim tracking-[3px] mb-8">
+        <p className="font-body text-[15px] text-text-dim tracking-[3px] mb-8">
           JUNE 22, 2026 &nbsp;&middot;&nbsp; WRIGHTSTOWN, WI
         </p>
 
@@ -69,7 +69,7 @@ export function Hero() {
           <CountdownTimer />
         </div>
 
-        <p className="font-body text-[15px] text-text-dim max-w-[440px] mx-auto mb-12 leading-relaxed">
+        <p className="font-body text-base text-text-dim max-w-[480px] mx-auto mb-12 leading-relaxed">
           100% of proceeds fund research for Bardet-Biedl Syndrome — a rare
           genetic disorder causing progressive childhood blindness.
         </p>
@@ -79,13 +79,13 @@ export function Hero() {
             href={REGISTER_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-gold text-black px-11 py-4 font-body font-semibold text-[12px] tracking-[3px] no-underline hover:bg-gold-light transition-all"
+            className="bg-gold text-black px-11 py-4 font-body font-semibold text-sm tracking-[3px] no-underline hover:bg-gold-light transition-all"
           >
             REGISTER
           </a>
           <a
             href="#sponsors"
-            className="border border-border text-text-main px-11 py-4 font-body font-medium text-[12px] tracking-[3px] no-underline hover:border-gold transition-all"
+            className="border border-border text-text-main px-11 py-4 font-body font-medium text-sm tracking-[3px] no-underline hover:border-gold transition-all"
           >
             SPONSOR
           </a>

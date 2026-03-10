@@ -1,5 +1,66 @@
 @import "tailwindcss";
 
+/* Playful page animations */
+@keyframes float-slow {
+  0% { transform: translateY(0) translateX(0); }
+  25% { transform: translateY(-15px) translateX(20px); }
+  50% { transform: translateY(-25px) translateX(40px); }
+  75% { transform: translateY(-15px) translateX(20px); }
+  100% { transform: translateY(0) translateX(0); }
+}
+@keyframes float-medium {
+  0% { transform: translateY(0) translateX(0); }
+  25% { transform: translateY(-20px) translateX(-15px); }
+  50% { transform: translateY(-10px) translateX(-30px); }
+  75% { transform: translateY(-20px) translateX(-15px); }
+  100% { transform: translateY(0) translateX(0); }
+}
+@keyframes float-fast {
+  0% { transform: translateY(0) translateX(0); }
+  50% { transform: translateY(-18px) translateX(25px); }
+  100% { transform: translateY(0) translateX(0); }
+}
+@keyframes pulse-slow {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 60px 20px rgba(253, 224, 71, 0.4); }
+  50% { transform: scale(1.08); box-shadow: 0 0 80px 30px rgba(253, 224, 71, 0.6); }
+}
+@keyframes scroll-down {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(8px); opacity: 0; }
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+@keyframes wave {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(10deg); }
+}
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 40px 15px rgba(253, 224, 71, 0.5);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 60px 25px rgba(253, 224, 71, 0.7);
+  }
+}
+
+.animate-float-slow { animation: float-slow 12s ease-in-out infinite; }
+.animate-float-medium { animation: float-medium 9s ease-in-out infinite; }
+.animate-float-fast { animation: float-fast 7s ease-in-out infinite; }
+.animate-pulse-slow { animation: pulse-slow 4s ease-in-out infinite; }
+.animate-scroll-down { animation: scroll-down 1.5s ease-in-out infinite; }
+.animate-twinkle { animation: twinkle 3s ease-in-out infinite; }
+.animate-wave { animation: wave 1s ease-in-out infinite; }
+.animate-spin-slow { animation: spin-slow 20s linear infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+
 @theme {
   --color-black: #0B0B0B;
   --color-charcoal: #141414;
@@ -7,12 +68,12 @@
   --color-dark-card: #1E1E1E;
   --color-gold: #C5A55A;
   --color-gold-light: #D4C08A;
-  --color-gold-dim: #8A7A4A;
+  --color-gold-dim: #B89D5A;
   --color-emerald: #1B6B3A;
-  --color-emerald-light: #2E8B57;
+  --color-emerald-light: #34A065;
   --color-cream: #F5F0E8;
-  --color-text-main: #E8E4DC;
-  --color-text-dim: #8A8578;
+  --color-text-main: #F2F0EB;
+  --color-text-dim: #C4BFB3;
   --color-border: #2A2A2A;
 
   --font-heading: 'Cormorant Garamond', serif;

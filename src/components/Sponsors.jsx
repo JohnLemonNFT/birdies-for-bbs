@@ -23,7 +23,7 @@ export function Sponsors() {
       <div className="max-w-[1000px] mx-auto">
         <Reveal>
           <div className="text-center mb-16">
-            <span className="font-body text-[11px] text-gold-dim tracking-[4px]">
+            <span className="font-body text-[13px] text-gold-dim tracking-[4px]">
               PARTNERSHIPS
             </span>
             <h2 className="font-heading text-[clamp(36px,6vw,52px)] text-cream mt-3 font-light">
@@ -31,7 +31,7 @@ export function Sponsors() {
               <span className="text-gold font-semibold">Opportunities</span>
             </h2>
             <GoldLine width="40px" className="mt-5 mb-5" />
-            <p className="font-body text-sm text-text-dim max-w-[480px] mx-auto leading-relaxed">
+            <p className="font-body text-base text-text-dim max-w-[520px] mx-auto leading-relaxed">
               Align your brand with a cause that matters. Every dollar goes
               directly to BBS research. Your visibility reaches 100+ golfers and
               their networks.
@@ -51,7 +51,7 @@ export function Sponsors() {
                   }`}
                 >
                   {tier.tag && (
-                    <span className="font-body text-[10px] text-gold tracking-[3px] mb-3">
+                    <span className="font-body text-sm text-gold tracking-[3px] mb-3">
                       {tier.tag}
                     </span>
                   )}
@@ -65,7 +65,7 @@ export function Sponsors() {
                     {tier.features.map((f, j) => (
                       <div
                         key={j}
-                        className="font-body text-[13px] text-text-dim py-1.5 flex items-start gap-2.5 leading-relaxed"
+                        className="font-body text-base text-text-dim py-1.5 flex items-start gap-2.5 leading-relaxed"
                       >
                         <span className={`${colors.dot} text-[6px] mt-[7px]`}>
                           &#9670;
@@ -82,7 +82,7 @@ export function Sponsors() {
                       isTitle
                         ? "border-gold text-gold hover:bg-gold hover:text-black"
                         : "border-border text-text-dim hover:bg-border hover:text-black"
-                    } font-body font-medium text-[11px] tracking-[2px] no-underline transition-all`}
+                    } font-body font-medium text-xs tracking-[2px] no-underline transition-all`}
                   >
                     INQUIRE
                   </a>

@@ -16,14 +16,14 @@ export function ContactForm() {
       <div className="max-w-[600px] mx-auto">
         <Reveal>
           <div className="text-center mb-12">
-            <span className="font-body text-[11px] text-gold-dim tracking-[4px]">
+            <span className="font-body text-[13px] text-gold-dim tracking-[4px]">
               REACH OUT
             </span>
             <h2 className="font-heading text-[clamp(36px,6vw,52px)] text-cream mt-3 font-light">
               Get in <span className="text-gold font-semibold">Touch</span>
             </h2>
             <GoldLine width="40px" className="mt-5 mb-5" />
-            <p className="font-body text-sm text-text-dim max-w-[400px] mx-auto leading-relaxed">
+            <p className="font-body text-base text-text-dim max-w-[400px] mx-auto leading-relaxed">
               Questions about sponsorship, registration, or donations? We'd love
               to hear from you.
             </p>
@@ -42,19 +42,19 @@ export function ContactForm() {
                 name="name"
                 placeholder="Your Name"
                 required
-                className="w-full bg-charcoal border border-border px-5 py-4 font-body text-sm text-text-main placeholder-text-dim outline-none focus:border-gold transition-colors"
+                className="w-full bg-charcoal border border-border px-5 py-4 font-body text-base text-text-main placeholder-text-dim outline-none focus:border-gold transition-colors"
               />
               <input
                 type="email"
                 name="email"
                 placeholder="Email Address"
                 required
-                className="w-full bg-charcoal border border-border px-5 py-4 font-body text-sm text-text-main placeholder-text-dim outline-none focus:border-gold transition-colors"
+                className="w-full bg-charcoal border border-border px-5 py-4 font-body text-base text-text-main placeholder-text-dim outline-none focus:border-gold transition-colors"
               />
             </div>
             <select
               name="interest"
-              className="w-full bg-charcoal border border-border px-5 py-4 font-body text-sm text-text-dim outline-none focus:border-gold transition-colors appearance-none cursor-pointer"
+              className="w-full bg-charcoal border border-border px-5 py-4 font-body text-base text-text-dim outline-none focus:border-gold transition-colors appearance-none cursor-pointer"
             >
               <option value="">I'm interested in...</option>
               <option value="sponsorship">Sponsorship</option>
@@ -67,11 +67,11 @@ export function ContactForm() {
               name="message"
               placeholder="Your Message"
               rows={4}
-              className="w-full bg-charcoal border border-border px-5 py-4 font-body text-sm text-text-main placeholder-text-dim outline-none focus:border-gold transition-colors resize-none"
+              className="w-full bg-charcoal border border-border px-5 py-4 font-body text-base text-text-main placeholder-text-dim outline-none focus:border-gold transition-colors resize-none"
             />
             <button
               type="submit"
-              className="w-full bg-gold text-black py-4 font-body font-semibold text-[12px] tracking-[3px] border-none cursor-pointer hover:bg-gold-light transition-colors"
+              className="w-full bg-gold text-black py-4 font-body font-semibold text-sm tracking-[3px] border-none cursor-pointer hover:bg-gold-light transition-colors"
             >
               SEND MESSAGE
             </button>

@@ -20,7 +20,7 @@ function Unit({ value, label }) {
       <div className="font-heading text-3xl sm:text-4xl font-semibold text-gold tabular-nums">
         {String(value).padStart(2, "0")}
       </div>
-      <div className="font-body text-[10px] text-text-dim tracking-[3px] mt-1">
+      <div className="font-body text-xs text-text-dim tracking-[3px] mt-1">
         {label}
       </div>
     </div>

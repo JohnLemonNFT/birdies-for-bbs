@@ -10,7 +10,7 @@ export function SponsorLogos() {
       <div className="max-w-[900px] mx-auto">
         <Reveal>
           <div className="text-center mb-12">
-            <span className="font-body text-[11px] text-gold-dim tracking-[4px]">
+            <span className="font-body text-sm text-gold-dim tracking-[4px]">
               OUR SPONSORS
             </span>
             <GoldLine width="40px" className="mt-4" />

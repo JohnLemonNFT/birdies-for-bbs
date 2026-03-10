@@ -34,7 +34,7 @@ export function WaysToHelp() {
       <div className="max-w-[900px] mx-auto">
         <Reveal>
           <div className="text-center mb-16">
-            <span className="font-body text-[11px] text-gold-dim tracking-[4px]">
+            <span className="font-body text-[13px] text-gold-dim tracking-[4px]">
               GET INVOLVED
             </span>
             <h2 className="font-heading text-[clamp(36px,6vw,52px)] text-cream mt-3 font-light">
@@ -57,7 +57,7 @@ export function WaysToHelp() {
                 <div className="font-heading text-[28px] text-gold font-semibold mb-3">
                   {w.label}
                 </div>
-                <p className="font-body text-[13px] text-text-dim leading-relaxed m-0">
+                <p className="font-body text-base text-text-dim leading-relaxed m-0">
                   {w.desc}
                 </p>
               </a>

@@ -32,7 +32,7 @@ export function Nav() {
           <span className="font-heading text-2xl text-gold font-semibold tracking-[2px]">
             BIRDIES
           </span>
-          <span className="font-body text-[11px] text-text-dim tracking-[3px] mt-0.5">
+          <span className="font-body text-xs text-text-dim tracking-[3px] mt-0.5">
             FOR BBS
           </span>
         </a>
@@ -43,7 +43,7 @@ export function Nav() {
             <a
               key={href}
               href={href}
-              className="text-text-dim no-underline text-[11px] font-body px-3.5 py-2 tracking-[2px] font-medium hover:text-gold transition-colors"
+              className="text-text-dim no-underline text-xs font-body px-3.5 py-2 tracking-[2px] font-medium hover:text-gold transition-colors"
             >
               {label}
             </a>
@@ -52,7 +52,7 @@ export function Nav() {
             href={REGISTER_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="border border-gold text-gold px-5 py-2 font-body font-medium text-[11px] tracking-[2px] no-underline ml-2 hover:bg-gold hover:text-black transition-all"
+            className="border border-gold text-gold px-5 py-2 font-body font-medium text-xs tracking-[2px] no-underline ml-2 hover:bg-gold hover:text-black transition-all"
           >
             REGISTER
           </a>
@@ -82,7 +82,7 @@ export function Nav() {
               key={href}
               href={href}
               onClick={() => setMenuOpen(false)}
-              className="text-text-dim no-underline text-[12px] font-body tracking-[2px] font-medium hover:text-gold transition-colors"
+              className="text-text-dim no-underline text-sm font-body tracking-[2px] font-medium hover:text-gold transition-colors"
             >
               {label}
             </a>
@@ -91,7 +91,7 @@ export function Nav() {
             href={REGISTER_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="border border-gold text-gold px-5 py-3 font-body font-medium text-[11px] tracking-[2px] no-underline text-center hover:bg-gold hover:text-black transition-all mt-2"
+            className="border border-gold text-gold px-5 py-3 font-body font-medium text-xs tracking-[2px] no-underline text-center hover:bg-gold hover:text-black transition-all mt-2"
           >
             REGISTER
           </a>

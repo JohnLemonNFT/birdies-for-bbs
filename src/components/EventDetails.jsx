@@ -13,14 +13,14 @@ export function EventDetails() {
       <div className="max-w-[900px] mx-auto">
         <Reveal>
           <div className="text-center mb-16">
-            <span className="font-body text-[11px] text-gold-dim tracking-[4px]">
+            <span className="font-body text-[13px] text-gold-dim tracking-[4px]">
               THE EVENT
             </span>
             <h2 className="font-heading text-[clamp(36px,6vw,56px)] text-cream mt-3 font-light">
               June <span className="text-gold font-semibold">22</span>, 2026
             </h2>
             <GoldLine width="40px" className="mt-5 mb-4" />
-            <p className="font-body text-[13px] text-text-dim tracking-[2px]">
+            <p className="font-body text-[15px] text-text-dim tracking-[2px]">
               ROYAL ST. PATRICK'S GOLF COURSE &nbsp;&middot;&nbsp; WRIGHTSTOWN, WI
             </p>
           </div>
@@ -29,7 +29,7 @@ export function EventDetails() {
         <div className="flex gap-10 flex-wrap">
           <Reveal delay={0.1} className="flex-1 min-w-[280px] basis-[380px]">
             <div className="border border-border p-10">
-              <h3 className="font-body text-[12px] text-gold-dim tracking-[3px] mt-0 mb-7">
+              <h3 className="font-body text-sm text-gold-dim tracking-[3px] mt-0 mb-7">
                 SCHEDULE
               </h3>
               {schedule.map(([time, event], i) => (
@@ -42,7 +42,7 @@ export function EventDetails() {
                   <span className="font-heading text-lg text-gold font-semibold min-w-[90px]">
                     {time}
                   </span>
-                  <span className="font-body text-sm text-text-main">
+                  <span className="font-body text-base text-text-main">
                     {event}
                   </span>
                 </div>
@@ -52,13 +52,13 @@ export function EventDetails() {
 
           <Reveal delay={0.2} className="flex-1 min-w-[280px] basis-[380px]">
             <div className="border border-border p-10 mb-6">
-              <h3 className="font-body text-[12px] text-gold-dim tracking-[3px] mt-0 mb-7">
+              <h3 className="font-body text-sm text-gold-dim tracking-[3px] mt-0 mb-7">
                 INCLUDED
               </h3>
               {includes.map((item, i) => (
                 <div
                   key={i}
-                  className={`font-body text-sm text-text-main py-2.5 flex items-center gap-3 ${
+                  className={`font-body text-base text-text-main py-2.5 flex items-center gap-3 ${
                     i < includes.length - 1 ? "border-b border-border" : ""
                   }`}
                 >
@@ -91,7 +91,7 @@ export function EventDetails() {
               href={REGISTER_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block bg-gold text-black py-4 px-14 font-body font-semibold text-[12px] tracking-[3px] no-underline hover:bg-gold-light transition-colors"
+              className="inline-block bg-gold text-black py-4 px-14 font-body font-semibold text-sm tracking-[3px] no-underline hover:bg-gold-light transition-colors"
             >
               SECURE YOUR FOURSOME
             </a>
