@@ -73,7 +73,7 @@ export function PlayfulHome() {
         </div>
 
         {/* Sun - clean, no emoji */}
-        <div className="absolute top-8 right-8 sm:top-16 sm:right-16 lg:top-20 lg:right-24">
+        <div className="absolute top-2 -right-4 sm:top-16 sm:right-16 lg:top-20 lg:right-24">
           <div className="relative w-20 h-20 sm:w-28 sm:h-28 bg-gradient-to-br from-yellow-300 via-yellow-400 to-amber-400 rounded-full shadow-2xl animate-pulse-glow" />
           <div className="absolute inset-0 w-20 h-20 sm:w-28 sm:h-28 bg-yellow-300/30 rounded-full blur-xl" />
         </div>
