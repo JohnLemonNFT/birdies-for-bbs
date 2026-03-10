@@ -597,6 +597,467 @@ function AddContactForm({ onAdd, onClose }) {
   );
 }
 
+// --- Golfers Tab ---
+function GolfersView({ golfers, onUpdate }) {
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all"); // all, paid, unpaid
+
+  const filtered = golfers.filter((g) => {
+    const matchSearch = !search ||
+      (g.name && g.name.toLowerCase().includes(search.toLowerCase())) ||
+      (g.email && g.email.toLowerCase().includes(search.toLowerCase())) ||
+      (g.company && g.company.toLowerCase().includes(search.toLowerCase()));
+    const matchFilter = filter === "all" ||
+      (filter === "paid" && g.paid) ||
+      (filter === "unpaid" && !g.paid);
+    return matchSearch && matchFilter;
+  });
+
+  const totalPlayers = golfers.reduce((sum, g) => sum + (g.num_players || 1), 0);
+  const totalPaid = golfers.filter(g => g.paid).reduce((sum, g) => sum + (g.num_players || 1), 0);
+  const totalRevenue = golfers.reduce((sum, g) => sum + (parseFloat(g.amount) || 0), 0);
+
+  return (
+    <div>
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-3 mb-5">
+        <div className="bg-white rounded-xl p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-gray-900">{golfers.length}</div>
+          <div className="text-xs text-gray-500">Teams</div>
+        </div>
+        <div className="bg-white rounded-xl p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-blue-600">{totalPlayers}</div>
+          <div className="text-xs text-gray-500">Players</div>
+        </div>
+        <div className="bg-white rounded-xl p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-green-600">${totalRevenue.toLocaleString()}</div>
+          <div className="text-xs text-gray-500">Collected</div>
+        </div>
+      </div>
+
+      <input
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search golfers..."
+        className="w-full px-5 py-4 rounded-xl border-2 border-gray-200 bg-white text-gray-900 text-base mb-4 focus:outline-none focus:border-blue-400 placeholder:text-gray-300"
+      />
+
+      <div className="flex gap-2 mb-4">
+        {[
+          { id: "all", label: "All" },
+          { id: "paid", label: "Paid" },
+          { id: "unpaid", label: "Unpaid" },
+        ].map((f) => (
+          <button
+            key={f.id}
+            onClick={() => setFilter(f.id)}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+              filter === f.id
+                ? "bg-green-600 text-white"
+                : "bg-white text-gray-600 border border-gray-200"
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
+        <span className="text-sm text-gray-400 ml-auto self-center">{filtered.length} teams</span>
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="text-center py-16 text-gray-400">No golfers found</div>
+      ) : (
+        <div className="space-y-2">
+          {filtered.map((g) => (
+            <GolferCard key={g.id} golfer={g} onUpdate={onUpdate} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function GolferCard({ golfer, onUpdate }) {
+  const [expanded, setExpanded] = useState(false);
+
+  const togglePaid = (e) => {
+    e.stopPropagation();
+    onUpdate({ ...golfer, paid: !golfer.paid });
+  };
+
+  const toggleConfirmed = (e) => {
+    e.stopPropagation();
+    onUpdate({ ...golfer, players_confirmed: !golfer.players_confirmed });
+  };
+
+  return (
+    <div
+      className={`bg-white rounded-xl p-4 border-2 cursor-pointer transition-all ${
+        golfer.paid ? "border-green-200" : "border-gray-200"
+      }`}
+      onClick={() => setExpanded(!expanded)}
+    >
+      <div className="flex justify-between items-start gap-3">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="font-bold text-gray-900">{golfer.name}</span>
+            {golfer.num_players > 1 && (
+              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full">
+                {golfer.num_players} players
+              </span>
+            )}
+          </div>
+          {golfer.company && <div className="text-sm text-gray-500">{golfer.company}</div>}
+          <div className="flex gap-2 mt-2 flex-wrap">
+            <button
+              onClick={togglePaid}
+              className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
+                golfer.paid
+                  ? "bg-green-100 text-green-700"
+                  : "bg-gray-100 text-gray-500"
+              }`}
+            >
+              {golfer.paid ? "✓ Paid" : "Unpaid"}
+            </button>
+            <button
+              onClick={toggleConfirmed}
+              className={`text-xs px-2.5 py-1 rounded-full font-semibold ${
+                golfer.players_confirmed
+                  ? "bg-blue-100 text-blue-700"
+                  : "bg-gray-100 text-gray-500"
+              }`}
+            >
+              {golfer.players_confirmed ? "✓ Confirmed" : "Unconfirmed"}
+            </button>
+            {golfer.logo_received && (
+              <span className="text-xs px-2.5 py-1 rounded-full bg-purple-100 text-purple-700 font-semibold">
+                Logo ✓
+              </span>
+            )}
+          </div>
+        </div>
+        <div className="text-right shrink-0">
+          <div className="text-lg font-bold text-green-600">
+            ${parseFloat(golfer.amount || 0).toLocaleString()}
+          </div>
+        </div>
+      </div>
+
+      {expanded && (
+        <div className="mt-4 pt-4 border-t border-gray-100" onClick={(e) => e.stopPropagation()}>
+          {golfer.email && (
+            <a href={`mailto:${golfer.email}`} className="text-sm text-blue-600 block mb-2">
+              {golfer.email}
+            </a>
+          )}
+          {golfer.notes && <p className="text-sm text-gray-500">{golfer.notes}</p>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AddGolferForm({ onAdd, onClose }) {
+  const [form, setForm] = useState({
+    name: "", email: "", phone: "", company: "", team_name: "",
+    num_players: 4, amount: "", paid: false, notes: "",
+  });
+
+  const handleSubmit = () => {
+    if (!form.name.trim()) return;
+    onAdd(form);
+    onClose();
+  };
+
+  const inputClass = "w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:border-blue-400";
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-[2000] flex items-center justify-center p-5">
+      <div className="bg-white rounded-2xl p-7 max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl">
+        <h3 className="text-xl font-bold text-gray-900 mb-5">Add Golfer/Team</h3>
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Name *</label>
+        <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputClass} placeholder="John Smith" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Email</label>
+        <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputClass} placeholder="email@example.com" type="email" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Company/Team Name</label>
+        <input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className={inputClass} placeholder="Company or team name" />
+
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <label className="text-sm text-gray-500 font-semibold block mb-1.5"># Players</label>
+            <input type="number" value={form.num_players} onChange={(e) => setForm({ ...form, num_players: parseInt(e.target.value) || 1 })} className={inputClass} min="1" max="4" />
+          </div>
+          <div>
+            <label className="text-sm text-gray-500 font-semibold block mb-1.5">Amount ($)</label>
+            <input type="number" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} className={inputClass} placeholder="0" />
+          </div>
+        </div>
+
+        <label className="flex items-center gap-3 mt-4 cursor-pointer">
+          <input type="checkbox" checked={form.paid} onChange={(e) => setForm({ ...form, paid: e.target.checked })} className="w-5 h-5 rounded" />
+          <span className="text-base font-medium text-gray-700">Paid</span>
+        </label>
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Notes</label>
+        <textarea value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} rows={2} className={`${inputClass} resize-y`} />
+
+        <div className="flex gap-3 mt-6">
+          <button onClick={handleSubmit} className="flex-1 py-3.5 rounded-xl font-bold text-base bg-green-600 text-white hover:bg-green-700 transition-colors">
+            Add Golfer
+          </button>
+          <button onClick={onClose} className="flex-1 py-3.5 rounded-xl font-bold text-base border-2 border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Raffle Tab ---
+function RaffleView({ items, onUpdate }) {
+  const [filter, setFilter] = useState("all");
+
+  const filtered = items.filter((item) => {
+    if (filter === "all") return true;
+    return item.status === filter;
+  });
+
+  const totalValue = items.reduce((sum, i) => sum + (parseFloat(i.value) || 0), 0);
+  const receivedValue = items.filter(i => i.status === "received").reduce((sum, i) => sum + (parseFloat(i.value) || 0), 0);
+
+  return (
+    <div>
+      {/* Stats */}
+      <div className="grid grid-cols-3 gap-3 mb-5">
+        <div className="bg-white rounded-xl p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-gray-900">{items.length}</div>
+          <div className="text-xs text-gray-500">Items</div>
+        </div>
+        <div className="bg-white rounded-xl p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-green-600">${receivedValue.toLocaleString()}</div>
+          <div className="text-xs text-gray-500">Received</div>
+        </div>
+        <div className="bg-white rounded-xl p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-blue-600">${totalValue.toLocaleString()}</div>
+          <div className="text-xs text-gray-500">Total Value</div>
+        </div>
+      </div>
+
+      <div className="flex gap-2 mb-4 flex-wrap">
+        {[
+          { id: "all", label: "All" },
+          { id: "pending", label: "Pending" },
+          { id: "received", label: "Received" },
+        ].map((f) => (
+          <button
+            key={f.id}
+            onClick={() => setFilter(f.id)}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition-colors ${
+              filter === f.id
+                ? "bg-green-600 text-white"
+                : "bg-white text-gray-600 border border-gray-200"
+            }`}
+          >
+            {f.label}
+          </button>
+        ))}
+      </div>
+
+      {filtered.length === 0 ? (
+        <div className="text-center py-16 text-gray-400">No raffle items</div>
+      ) : (
+        <div className="space-y-2">
+          {filtered.map((item) => (
+            <div
+              key={item.id}
+              className={`bg-white rounded-xl p-4 border-2 ${
+                item.status === "received" ? "border-green-200" : "border-gray-200"
+              }`}
+            >
+              <div className="flex justify-between items-start gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="font-bold text-gray-900">{item.item}</div>
+                  {item.donor && <div className="text-sm text-gray-500">From: {item.donor}</div>}
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="text-lg font-bold text-green-600">${parseFloat(item.value || 0).toLocaleString()}</div>
+                  <button
+                    onClick={() => onUpdate({ ...item, status: item.status === "received" ? "pending" : "received" })}
+                    className={`text-xs px-2.5 py-1 rounded-full font-semibold mt-1 ${
+                      item.status === "received"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-gray-100 text-gray-500"
+                    }`}
+                  >
+                    {item.status === "received" ? "✓ Received" : "Pending"}
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AddRaffleForm({ onAdd, onClose }) {
+  const [form, setForm] = useState({ item: "", donor: "", value: "", status: "pending", notes: "" });
+
+  const handleSubmit = () => {
+    if (!form.item.trim()) return;
+    onAdd(form);
+    onClose();
+  };
+
+  const inputClass = "w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:border-blue-400";
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-[2000] flex items-center justify-center p-5">
+      <div className="bg-white rounded-2xl p-7 max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl">
+        <h3 className="text-xl font-bold text-gray-900 mb-5">Add Raffle Item</h3>
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Item *</label>
+        <input value={form.item} onChange={(e) => setForm({ ...form, item: e.target.value })} className={inputClass} placeholder="e.g. Golf Bag, Gift Card" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Donor</label>
+        <input value={form.donor} onChange={(e) => setForm({ ...form, donor: e.target.value })} className={inputClass} placeholder="Who donated this?" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Value ($)</label>
+        <input type="number" value={form.value} onChange={(e) => setForm({ ...form, value: e.target.value })} className={inputClass} placeholder="0" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Status</label>
+        <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })} className={inputClass}>
+          <option value="pending">Pending</option>
+          <option value="received">Received</option>
+        </select>
+
+        <div className="flex gap-3 mt-6">
+          <button onClick={handleSubmit} className="flex-1 py-3.5 rounded-xl font-bold text-base bg-green-600 text-white hover:bg-green-700 transition-colors">
+            Add Item
+          </button>
+          <button onClick={onClose} className="flex-1 py-3.5 rounded-xl font-bold text-base border-2 border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Volunteers Tab ---
+function VolunteersView({ volunteers, onUpdate }) {
+  const assignments = [...new Set(volunteers.map(v => v.assignment).filter(Boolean))];
+
+  return (
+    <div>
+      {/* Stats */}
+      <div className="grid grid-cols-2 gap-3 mb-5">
+        <div className="bg-white rounded-xl p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-gray-900">{volunteers.length}</div>
+          <div className="text-xs text-gray-500">Volunteers</div>
+        </div>
+        <div className="bg-white rounded-xl p-4 text-center border border-gray-200">
+          <div className="text-2xl font-bold text-green-600">{volunteers.filter(v => v.confirmed).length}</div>
+          <div className="text-xs text-gray-500">Confirmed</div>
+        </div>
+      </div>
+
+      {/* By Assignment */}
+      {assignments.length > 0 && (
+        <div className="mb-5">
+          <h3 className="text-sm font-semibold text-gray-500 mb-2">By Assignment</h3>
+          <div className="flex gap-2 flex-wrap">
+            {assignments.map((a) => (
+              <span key={a} className="text-xs bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full">
+                {a}: {volunteers.filter(v => v.assignment === a).length}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {volunteers.length === 0 ? (
+        <div className="text-center py-16 text-gray-400">No volunteers yet</div>
+      ) : (
+        <div className="space-y-2">
+          {volunteers.map((v) => (
+            <div
+              key={v.id}
+              className={`bg-white rounded-xl p-4 border-2 ${
+                v.confirmed ? "border-green-200" : "border-gray-200"
+              }`}
+            >
+              <div className="flex justify-between items-center gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="font-bold text-gray-900">{v.name}</div>
+                  {v.assignment && (
+                    <div className="text-sm text-gray-500">{v.assignment}</div>
+                  )}
+                </div>
+                <button
+                  onClick={() => onUpdate({ ...v, confirmed: !v.confirmed })}
+                  className={`text-xs px-3 py-1.5 rounded-full font-semibold ${
+                    v.confirmed
+                      ? "bg-green-100 text-green-700"
+                      : "bg-gray-100 text-gray-500"
+                  }`}
+                >
+                  {v.confirmed ? "✓ Confirmed" : "Unconfirmed"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AddVolunteerForm({ onAdd, onClose }) {
+  const [form, setForm] = useState({ name: "", email: "", phone: "", assignment: "", notes: "" });
+
+  const handleSubmit = () => {
+    if (!form.name.trim()) return;
+    onAdd(form);
+    onClose();
+  };
+
+  const inputClass = "w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-white text-gray-900 text-base focus:outline-none focus:border-blue-400";
+
+  return (
+    <div className="fixed inset-0 bg-black/50 z-[2000] flex items-center justify-center p-5">
+      <div className="bg-white rounded-2xl p-7 max-w-lg w-full max-h-[85vh] overflow-y-auto shadow-2xl">
+        <h3 className="text-xl font-bold text-gray-900 mb-5">Add Volunteer</h3>
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Name *</label>
+        <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputClass} placeholder="Full name" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Email</label>
+        <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputClass} placeholder="email@example.com" type="email" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Phone</label>
+        <input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputClass} placeholder="(920) 555-1234" />
+
+        <label className="text-sm text-gray-500 font-semibold block mb-1.5 mt-4">Assignment</label>
+        <input value={form.assignment} onChange={(e) => setForm({ ...form, assignment: e.target.value })} className={inputClass} placeholder="e.g. Registration, Raffle, 50/50" />
+
+        <div className="flex gap-3 mt-6">
+          <button onClick={handleSubmit} className="flex-1 py-3.5 rounded-xl font-bold text-base bg-green-600 text-white hover:bg-green-700 transition-colors">
+            Add Volunteer
+          </button>
+          <button onClick={onClose} className="flex-1 py-3.5 rounded-xl font-bold text-base border-2 border-gray-200 text-gray-500 hover:bg-gray-50 transition-colors">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // --- Playbook Tab ---
 const REVENUE_IDEAS = [
   { title: "Mulligan Sales", desc: "$5-10 each or 'Mulligan Pack' (3 mulligans + 10 raffle tickets = $30)", potential: "$500-1,500" },
@@ -718,12 +1179,18 @@ export default function CRM() {
   const { signOut } = useAuth();
   const [businesses, setBusinesses] = useState([]);
   const [contacts, setContacts] = useState([]);
+  const [golfers, setGolfers] = useState([]);
+  const [raffleItems, setRaffleItems] = useState([]);
+  const [volunteers, setVolunteers] = useState([]);
   const [tab, setTab] = useState("dashboard");
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [filterCategory, setFilterCategory] = useState("all");
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAddContact, setShowAddContact] = useState(false);
+  const [showAddGolfer, setShowAddGolfer] = useState(false);
+  const [showAddRaffle, setShowAddRaffle] = useState(false);
+  const [showAddVolunteer, setShowAddVolunteer] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [toast, setToast] = useState("");
   const goal = 25000;
@@ -752,6 +1219,27 @@ export default function CRM() {
       if (!contactError && contactData) {
         setContacts(contactData);
       }
+
+      // Load golfers
+      const { data: golferData } = await supabase
+        .from("golfers")
+        .select("*")
+        .order("name", { ascending: true });
+      if (golferData) setGolfers(golferData);
+
+      // Load raffle items
+      const { data: raffleData } = await supabase
+        .from("raffle_items")
+        .select("*")
+        .order("item", { ascending: true });
+      if (raffleData) setRaffleItems(raffleData);
+
+      // Load volunteers
+      const { data: volunteerData } = await supabase
+        .from("volunteers")
+        .select("*")
+        .order("name", { ascending: true });
+      if (volunteerData) setVolunteers(volunteerData);
 
       setLoaded(true);
     }
@@ -849,6 +1337,101 @@ export default function CRM() {
     showToast(`Added ${newContact.name || newContact.email}`);
   }, []);
 
+  // Golfer CRUD
+  const addGolfer = useCallback(async (newGolfer) => {
+    const { data, error } = await supabase
+      .from("golfers")
+      .insert({
+        name: newGolfer.name,
+        email: newGolfer.email,
+        phone: newGolfer.phone,
+        company: newGolfer.company,
+        team_name: newGolfer.team_name,
+        num_players: newGolfer.num_players || 4,
+        amount: parseFloat(newGolfer.amount) || 0,
+        paid: newGolfer.paid || false,
+        notes: newGolfer.notes,
+        event_year: 2026,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error adding golfer:", error);
+      showToast("Error adding golfer");
+      return;
+    }
+
+    setGolfers((prev) => [data, ...prev]);
+    showToast(`Added ${newGolfer.name}`);
+  }, []);
+
+  const updateGolfer = useCallback(async (updated) => {
+    setGolfers((prev) => prev.map((g) => (g.id === updated.id ? updated : g)));
+    await supabase.from("golfers").update(updated).eq("id", updated.id);
+  }, []);
+
+  // Raffle CRUD
+  const addRaffleItem = useCallback(async (newItem) => {
+    const { data, error } = await supabase
+      .from("raffle_items")
+      .insert({
+        item: newItem.item,
+        donor: newItem.donor,
+        value: parseFloat(newItem.value) || 0,
+        status: newItem.status || "pending",
+        notes: newItem.notes,
+        event_year: 2026,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error adding raffle item:", error);
+      showToast("Error adding item");
+      return;
+    }
+
+    setRaffleItems((prev) => [data, ...prev]);
+    showToast(`Added ${newItem.item}`);
+  }, []);
+
+  const updateRaffleItem = useCallback(async (updated) => {
+    setRaffleItems((prev) => prev.map((i) => (i.id === updated.id ? updated : i)));
+    await supabase.from("raffle_items").update(updated).eq("id", updated.id);
+  }, []);
+
+  // Volunteer CRUD
+  const addVolunteer = useCallback(async (newVol) => {
+    const { data, error } = await supabase
+      .from("volunteers")
+      .insert({
+        name: newVol.name,
+        email: newVol.email,
+        phone: newVol.phone,
+        assignment: newVol.assignment,
+        confirmed: false,
+        notes: newVol.notes,
+        event_year: 2026,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error adding volunteer:", error);
+      showToast("Error adding volunteer");
+      return;
+    }
+
+    setVolunteers((prev) => [data, ...prev]);
+    showToast(`Added ${newVol.name}`);
+  }, []);
+
+  const updateVolunteer = useCallback(async (updated) => {
+    setVolunteers((prev) => prev.map((v) => (v.id === updated.id ? updated : v)));
+    await supabase.from("volunteers").update(updated).eq("id", updated.id);
+  }, []);
+
   const filteredBiz = businesses.filter((b) => {
     if (search && !b.name.toLowerCase().includes(search.toLowerCase())) return false;
     if (filterStatus !== "all" && b.status !== filterStatus) return false;
@@ -857,10 +1440,12 @@ export default function CRM() {
   });
 
   const tabConfig = [
-    { id: "dashboard", label: "Dashboard" },
-    { id: "directory", label: "Outreach" },
-    { id: "contacts", label: "Email List" },
-    { id: "playbook", label: "Playbook" },
+    { id: "dashboard", label: "Home" },
+    { id: "directory", label: "Sponsors" },
+    { id: "golfers", label: "Golfers" },
+    { id: "raffle", label: "Raffle" },
+    { id: "volunteers", label: "Helpers" },
+    { id: "playbook", label: "Ideas" },
   ];
 
   return (
@@ -875,7 +1460,13 @@ export default function CRM() {
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => tab === "contacts" ? setShowAddContact(true) : setShowAddForm(true)}
+                onClick={() => {
+                  if (tab === "golfers") setShowAddGolfer(true);
+                  else if (tab === "raffle") setShowAddRaffle(true);
+                  else if (tab === "volunteers") setShowAddVolunteer(true);
+                  else if (tab === "contacts") setShowAddContact(true);
+                  else setShowAddForm(true);
+                }}
                 className="px-5 py-2.5 rounded-xl font-bold text-base bg-green-600 text-white hover:bg-green-700 transition-colors"
               >
                 + Add
@@ -889,12 +1480,12 @@ export default function CRM() {
               </button>
             </div>
           </div>
-          <div className="flex gap-1 bg-gray-100 rounded-xl p-1">
+          <div className="flex gap-1 bg-gray-100 rounded-xl p-1 overflow-x-auto">
             {tabConfig.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setTab(t.id)}
-                className={`flex-1 py-3 rounded-lg text-sm sm:text-base font-semibold transition-colors ${
+                className={`px-3 py-2.5 rounded-lg text-xs sm:text-sm font-semibold transition-colors whitespace-nowrap ${
                   tab === t.id
                     ? "bg-white text-gray-900 shadow-sm"
                     : "text-gray-400 hover:text-gray-600"
@@ -959,6 +1550,18 @@ export default function CRM() {
           <ContactsView contacts={contacts} />
         )}
 
+        {tab === "golfers" && (
+          <GolfersView golfers={golfers} onUpdate={updateGolfer} />
+        )}
+
+        {tab === "raffle" && (
+          <RaffleView items={raffleItems} onUpdate={updateRaffleItem} />
+        )}
+
+        {tab === "volunteers" && (
+          <VolunteersView volunteers={volunteers} onUpdate={updateVolunteer} />
+        )}
+
         {tab === "playbook" && <PlaybookView />}
       </div>
 
@@ -975,6 +1578,18 @@ export default function CRM() {
 
       {showAddContact && (
         <AddContactForm onAdd={addContact} onClose={() => setShowAddContact(false)} />
+      )}
+
+      {showAddGolfer && (
+        <AddGolferForm onAdd={addGolfer} onClose={() => setShowAddGolfer(false)} />
+      )}
+
+      {showAddRaffle && (
+        <AddRaffleForm onAdd={addRaffleItem} onClose={() => setShowAddRaffle(false)} />
+      )}
+
+      {showAddVolunteer && (
+        <AddVolunteerForm onAdd={addVolunteer} onClose={() => setShowAddVolunteer(false)} />
       )}
     </div>
   );
